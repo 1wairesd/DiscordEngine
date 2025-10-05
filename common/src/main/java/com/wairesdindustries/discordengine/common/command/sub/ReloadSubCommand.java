@@ -1,0 +1,43 @@
+package com.wairesdindustries.discordengine.common.command.sub;
+
+import com.wairesdindustries.discordengine.api.DEAPI;
+import com.wairesdindustries.discordengine.api.data.subcommand.SubCommandType;
+import com.wairesdindustries.discordengine.api.platform.DECommandSender;
+import com.wairesdindustries.discordengine.common.command.DefaultCommand;
+import com.wairesdindustries.discordengine.api.tools.DETools;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
+public class ReloadSubCommand extends DefaultCommand {
+
+    private final DEAPI api;
+
+	public ReloadSubCommand(DEAPI api) {
+		super(api, "reload", SubCommandType.PLAYER);
+        this.api = api;
+	}
+
+    @Override
+    public List<String> getTabCompletions(@NotNull DECommandSender sender, @NotNull String label, @NotNull String[] args) {
+        return List.of();
+    }
+
+    @Override
+    public boolean execute(@NotNull DECommandSender sender, @NotNull String label, @NotNull String[] args) {
+        DEAPI api = DEAPI.getInstance();
+        load();
+        sender.sendMessage(DETools.prefix(
+                api.getConfigManager().getMessages().getString("config-reloaded", "§aConfiguration reloaded!")
+        ));
+        return true;
+    }
+
+    private void load() {
+        api.getConfigManager().load();
+        api.getBotService().updateActivity();
+    }
+
+}
+
+

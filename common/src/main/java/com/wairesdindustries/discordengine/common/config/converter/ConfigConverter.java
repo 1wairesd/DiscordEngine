@@ -1,0 +1,57 @@
+package com.wairesdindustries.discordengine.common.config.converter;
+
+import com.wairesdindustries.discordengine.api.config.Config;
+import com.wairesdindustries.discordengine.api.config.converter.ConfigMigrator;
+import com.wairesdindustries.discordengine.api.config.converter.ConfigType;
+import com.wairesdindustries.discordengine.api.config.converter.ConvertOrder;
+import com.wairesdindustries.discordengine.common.config.ConfigManagerImpl;
+import org.spongepowered.configurate.ConfigurateException;
+
+import java.util.ArrayList;
+import java.util.logging.Level;
+
+public class ConfigConverter {
+
+    private final ConfigManagerImpl configManager;
+
+    public ConfigConverter(ConfigManagerImpl configManager) {
+        this.configManager = configManager;
+    }
+
+    public void convert(ConvertOrder order) {
+        for (Config config : new ArrayList<>(this.configManager.get().values())) {
+            try {
+                convert(config, order);
+            } catch (ConfigurateException e) {
+                this.configManager.getPlatform().getLogger().log(Level.WARNING, "Error with converting configuration: " + config, e);
+            }
+        }
+    }
+
+    public void convert(Config config, ConvertOrder order) throws ConfigurateException, IllegalArgumentException {
+        int version = config.version();
+        ConfigType currentType = config.type();
+
+        if (version == currentType.getLatestVersion() && !currentType.isPermanent()) return;
+
+        while (version < currentType.getLatestVersion() || currentType.isPermanent()) {
+            ConfigMigrator migrator = currentType.getMigrator(version);
+            if (migrator == null) break;
+
+            if (migrator.order() != order || !migrator.canMigrate()) {
+                break;
+            }
+
+            this.configManager.getPlatform().getLogger().info(config + " converting...");
+            migrator.migrate(config);
+            if(currentType.isPermanent()) {
+                this.configManager.getPlatform().getLogger().info(config + " converted permanently from " + currentType + " to " + config.type());
+                convert(config, order);
+                break;
+            }
+            this.configManager.getPlatform().getLogger().info(config + " converted from " + version + " to " + ++version);
+        }
+
+        config.save();
+    }
+}

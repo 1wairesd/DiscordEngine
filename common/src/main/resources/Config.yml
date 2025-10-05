@@ -1,0 +1,5 @@
+bot:
+  key: "your-bot-token-here"
+  Activity: "DiscordEngine"
+
+language: "en_US"

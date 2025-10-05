@@ -1,0 +1,6 @@
+prefix: "&7[&bDiscordEngine&7] &r"
+config-reloaded: "&aКонфігурацію перезавантажено!"
+no-permission: '&cУ вас немає прав'
+help:
+  - '&9/%cmd% help &3- &2Поміч по плагіну'
+  - '&9/%cmd% reload &3- &2Перезавантажити конфіг'

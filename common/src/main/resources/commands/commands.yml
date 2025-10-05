@@ -1,0 +1,7 @@
+commands:
+  hello:
+    description: "Приветствует пользователя"
+    context: "server"
+    actions:
+      - send_message:
+          content: "Привет!"
