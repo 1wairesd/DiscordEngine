@@ -1,4 +1,4 @@
 package com.wairesdindustries.discordengine.common.discord.config;
 
-public class ModalLoader {
+public class DiscordModalLoader {
 }

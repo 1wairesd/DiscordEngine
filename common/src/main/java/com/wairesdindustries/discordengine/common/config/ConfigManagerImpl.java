@@ -4,6 +4,7 @@ import com.wairesdindustries.discordengine.api.config.Messages;
 import com.wairesdindustries.discordengine.api.config.converter.ConfigType;
 import com.wairesdindustries.discordengine.api.config.converter.ConvertOrder;
 import com.wairesdindustries.discordengine.api.data.config.ConfigData;
+import com.wairesdindustries.discordengine.api.event.plugin.DiscordEngineReloadEvent;
 import com.wairesdindustries.discordengine.api.manager.ConfigManager;
 import com.wairesdindustries.discordengine.common.config.converter.ConfigConverter;
 import com.wairesdindustries.discordengine.common.platform.BackendPlatform;
@@ -30,7 +31,7 @@ public class ConfigManagerImpl implements ConfigManager {
     private final BackendPlatform platform;
 
     private final ConfigConverter converter;
-    private final Messages messages;
+    private final MessagesImpl messages;
 
     public ConfigManagerImpl(BackendPlatform platform) {
         this.converter = new ConfigConverter(this);
@@ -52,9 +53,15 @@ public class ConfigManagerImpl implements ConfigManager {
                 return;
             }
             messages.load(config.language());
+
+
         } catch (ConfigurateException e) {
             platform.getLogger().log(Level.WARNING, "Error with loading configuration: ", e);
         }
+
+        converter.convert(ConvertOrder.ON_CONFIG);
+
+        platform.getAPI().getEventBus().post(new DiscordEngineReloadEvent(DiscordEngineReloadEvent.Type.CONFIG));
     }
 
     private void loadConfigurations(File[] files, boolean deep) {

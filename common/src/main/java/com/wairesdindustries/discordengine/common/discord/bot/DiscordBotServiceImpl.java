@@ -1,7 +1,7 @@
 package com.wairesdindustries.discordengine.common.discord.bot;
 
 import com.wairesdindustries.discordengine.api.data.config.ConfigData;
-import com.wairesdindustries.discordengine.api.discord.DiscordBotService;
+import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotService;
 import com.wairesdindustries.discordengine.common.DiscordEngine;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
@@ -90,5 +90,24 @@ public class DiscordBotServiceImpl implements DiscordBotService {
 
     public JDA getJDA() {
         return jda;
+    }
+
+    @Override
+    public void deleteCommand(String trigger) {
+        if (jda == null) return;
+
+        jda.updateCommands().queue(commands -> {
+            commands.stream()
+                    .filter(cmd -> cmd.getName().equalsIgnoreCase(trigger))
+                    .forEach(cmd -> jda.deleteCommandById(cmd.getId()).queue());
+        });
+    }
+
+    @Override
+    public synchronized void deleteAllCommands() {
+        if (jda == null) return;
+        jda.updateCommands().queue(commands -> {
+            commands.forEach(cmd -> jda.deleteCommandById(cmd.getId()).queue());
+        });
     }
 }

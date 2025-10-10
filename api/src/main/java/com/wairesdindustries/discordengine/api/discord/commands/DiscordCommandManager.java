@@ -1,6 +1,6 @@
 package com.wairesdindustries.discordengine.api.discord.commands;
 
-public interface CommandManager {
-    void registerCommand(Command command);
+public interface DiscordCommandManager {
+    void registerCommand(DiscordCommand command);
     void registerAll();
 }

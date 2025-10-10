@@ -1,6 +1,7 @@
 package com.wairesdindustries.discordengine.common.platform;
 
 import com.wairesdindustries.discordengine.api.platform.Platform;
+import com.wairesdindustries.discordengine.common.scheduler.BackendScheduler;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,6 +17,9 @@ import java.util.logging.Level;
 
 @Getter
 public abstract class BackendPlatform implements Platform {
+
+    @NotNull
+    private final BackendScheduler scheduler = new BackendScheduler();
 
     public abstract void load();
 
@@ -73,6 +77,11 @@ public abstract class BackendPlatform implements Platform {
         } catch (IOException ex) {
             return null;
         }
+    }
+
+    @Override
+    public @NotNull BackendScheduler getScheduler() {
+        return scheduler;
     }
 }
 

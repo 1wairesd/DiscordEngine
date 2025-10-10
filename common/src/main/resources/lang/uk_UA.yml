@@ -4,3 +4,11 @@ no-permission: '&cУ вас немає прав'
 help:
   - '&9/%cmd% help &3- &2Поміч по плагіну'
   - '&9/%cmd% reload &3- &2Перезавантажити конфіг'
+  - '&9/%cmd% discord command delete &3- &2Видалити команду в Discord'
+
+confirmation-invalid-input: "&cНевірний ввід. Введіть &aY &cабо &cN"
+confirmation-timeout: "&cПідтвердження скасовано по таймаут (%seconds% сек)"
+discord-command-deleted: "&aКоманда %trigger% видалена в Discord!"
+discord-command-delete-confirm: "&cТи збираєшся видалити всі команди, зареєстровані в Discord! Підтвердіть ввід Y або N."
+discord-command-delete-cancel: "&cВидалення команд скасовано."
+discord-command-delete-all: "&aВсі команди в Discord були видалені!"

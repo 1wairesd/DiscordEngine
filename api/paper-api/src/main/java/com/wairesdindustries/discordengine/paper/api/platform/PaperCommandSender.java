@@ -35,6 +35,11 @@ public class PaperCommandSender implements DECommandSender {
     }
 
     @Override
+    public boolean isConsole() {
+        return sender == sender.getServer().getConsoleSender();
+    }
+
+    @Override
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         PaperCommandSender that = (PaperCommandSender) object;

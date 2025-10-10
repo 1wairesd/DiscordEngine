@@ -6,10 +6,13 @@ import com.wairesdindustries.discordengine.api.platform.DECommandSender;
 import com.wairesdindustries.discordengine.common.command.DefaultCommand;
 import org.jetbrains.annotations.NotNull;
 
-public class HelpSubCommand extends DefaultCommand {
+public class HelpCommand extends DefaultCommand {
 
-    public HelpSubCommand(DEAPI api) {
+    private final DEAPI api;
+
+    public HelpCommand(DEAPI api) {
         super(api,"help", SubCommandType.PLAYER);
+        this.api = api;
     }
 
     @Override

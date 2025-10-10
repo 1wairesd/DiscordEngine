@@ -9,11 +9,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ReloadSubCommand extends DefaultCommand {
+public class ReloadCommand extends DefaultCommand {
 
     private final DEAPI api;
 
-	public ReloadSubCommand(DEAPI api) {
+	public ReloadCommand(DEAPI api) {
 		super(api, "reload", SubCommandType.PLAYER);
         this.api = api;
 	}
@@ -35,7 +35,15 @@ public class ReloadSubCommand extends DefaultCommand {
 
     private void load() {
         api.getConfigManager().load();
-        api.getBotService().updateActivity();
+
+        refreshDiscordCommands();
+
+        api.getDiscordBotService().updateActivity();
+    }
+
+    private void refreshDiscordCommands() {
+        api.getDiscordCommandLoader().load();
+        api.getDiscordCommandManager().registerAll();
     }
 
 }

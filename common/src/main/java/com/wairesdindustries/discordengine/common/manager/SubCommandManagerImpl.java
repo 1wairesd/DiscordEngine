@@ -5,8 +5,9 @@ import com.wairesdindustries.discordengine.api.data.subcommand.SubCommand;
 import com.wairesdindustries.discordengine.api.manager.SubCommandManager;
 import com.wairesdindustries.discordengine.api.platform.Platform;
 import com.wairesdindustries.discordengine.common.command.DefaultCommand;
-import com.wairesdindustries.discordengine.common.command.sub.HelpSubCommand;
-import com.wairesdindustries.discordengine.common.command.sub.ReloadSubCommand;
+import com.wairesdindustries.discordengine.common.command.sub.HelpCommand;
+import com.wairesdindustries.discordengine.common.command.sub.ReloadCommand;
+import com.wairesdindustries.discordengine.common.command.sub.DiscordCommand;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,9 +28,11 @@ public class SubCommandManagerImpl implements SubCommandManager {
     }
 
     private static final List<? extends Class<? extends DefaultCommand>> defaultCommands = Arrays.asList(
-        HelpSubCommand.class,
-        ReloadSubCommand.class
+            HelpCommand.class,
+            ReloadCommand.class,
+            DiscordCommand.class
     );
+
 
     private final Map<String, SubCommand> registeredSubCommands = new ConcurrentHashMap<>();
 

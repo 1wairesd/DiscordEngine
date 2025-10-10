@@ -1,10 +1,10 @@
 package com.wairesdindustries.discordengine.common.discord.config;
 
 import com.wairesdindustries.discordengine.api.config.Loadable;
+import com.wairesdindustries.discordengine.api.discord.actions.DiscordAction;
 import com.wairesdindustries.discordengine.common.DiscordEngine;
-import com.wairesdindustries.discordengine.api.discord.actions.Action;
-import com.wairesdindustries.discordengine.common.discord.actions.SendMessageAction;
-import com.wairesdindustries.discordengine.common.discord.commands.CommandImpl;
+import com.wairesdindustries.discordengine.common.discord.actions.DiscordSendMessageAction;
+import com.wairesdindustries.discordengine.common.discord.commands.DiscordCommandImpl;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
@@ -13,14 +13,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandLoader implements Loadable {
+public class DiscordCommandLoader implements Loadable {
     private static final String COMMANDS_FOLDER = "commands";
     private static final String DEFAULT_COMMAND_FILE = "commands.yml";
     private static final List<String> DEFAULT_COMMANDS = List.of(COMMANDS_FOLDER + "/" + DEFAULT_COMMAND_FILE);
 
     private final DiscordEngine api;
 
-    public CommandLoader(DiscordEngine api) {
+    public DiscordCommandLoader(DiscordEngine api) {
         this.api = api;
     }
 
@@ -50,18 +50,22 @@ public class CommandLoader implements Loadable {
                     ConfigurationNode cmdNode = commandsNode.node(name);
                     String description = cmdNode.node("description").getString("");
 
-                    List<Action> actions = new ArrayList<>();
+                    List<DiscordAction> actions = new ArrayList<>();
                     for (ConfigurationNode actionNode : cmdNode.node("actions").childrenList()) {
                         Object typeKey = actionNode.childrenMap().keySet().iterator().next();
                         String type = typeKey.toString();
                         ConfigurationNode params = actionNode.node(type);
 
                         if ("send_message".equals(type)) {
-                            actions.add(new SendMessageAction(params.node("content").getString("")));
+                            actions.add(new DiscordSendMessageAction(params.node("content").getString("")));
                         }
                     }
 
-                    api.getCommandManager().registerCommand(new CommandImpl(name, description, actions));
+                    String trigger = cmdNode.node("trigger").getString(name);
+
+                    api.getDiscordCommandManager().registerCommand(
+                            new DiscordCommandImpl(name, trigger, description, actions)
+                    );
                 }
 
             } catch (IOException e) {

@@ -1,7 +1,8 @@
 commands:
   hello:
     description: "Приветствует пользователя"
-    context: "server"
+    type: "both" # slash | prefix | both
+    context: "server" # server | dm | both
     actions:
       - send_message:
-          content: "Привет!"
+          content: "👋 Привет, {user}!"

@@ -6,11 +6,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class BukkitOfflinePlayer implements DEOfflinePlayer {
+public class PaperOfflinePlayer implements DEOfflinePlayer {
 
     private final OfflinePlayer player;
 
-    public BukkitOfflinePlayer(OfflinePlayer player) {
+    public PaperOfflinePlayer(OfflinePlayer player) {
         this.player = player;
     }
 

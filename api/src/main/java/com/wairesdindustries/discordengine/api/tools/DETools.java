@@ -64,4 +64,17 @@ public abstract class DETools {
         return rc(result);
     }
 
+    public static @NotNull String formatConfirmationMessage(@NotNull String text, Object... args) {
+        String formatted = String.format(text, args);
+        return rc(formatted);
+    }
+
+    public static void sendConfirmationMessage(DECommandSender sender, String message) {
+        if (sender == null) {
+            System.out.println(message);
+        } else {
+            sender.sendMessage(message);
+        }
+    }
+
 }

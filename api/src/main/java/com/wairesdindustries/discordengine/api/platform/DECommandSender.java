@@ -11,4 +11,6 @@ public interface DECommandSender {
 	boolean hasPermission(String permission);
 
 	void sendMessage(@NotNull String message);
+
+	boolean isConsole();
 }
