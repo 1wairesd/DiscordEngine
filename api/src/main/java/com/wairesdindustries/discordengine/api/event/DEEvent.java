@@ -1,4 +1,4 @@
-package com.wairesdindustries.discordengine.api.event
+package com.wairesdindustries.discordengine.api.event;
 
 /**
  * An event that may be fired by DiscordEngine when something occurs.
