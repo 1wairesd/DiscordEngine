@@ -32,30 +32,30 @@ public class DiscordCommand extends DefaultCommand {
             api.getDiscordBotService().deleteCommand(trigger);
 
             String template = api.getConfigManager().getMessages()
-                    .getString("discord-command-deleted", "§aКоманда %trigger% удалена в Discord!");
+                    .getString("discord-command-deleted", "&aCommand %trigger% unlinked in Discord!");
             String msg = DETools.rt(template, new LocalPlaceholder("%trigger%", trigger));
             sender.sendMessage(DETools.prefix(msg));
             return true;
         }
 
         String warning = api.getConfigManager().getMessages()
-                .getString("discord-command-delete-confirm", "§cТы собираешься удалить все команды, зарегистрированные в Discord! Подтвердите вводом Y или N.");
+                .getString("discord-command-delete-confirm", "&cYou are about to unlink all commands registered in Discord! Please confirm by entering Y or N.");
         sender.sendMessage(DETools.prefix(DETools.rc(warning)));
 
         String invalidInputMsg = api.getConfigManager().getMessages()
-                .getString("confirmation-invalid-input", "§cНеверный ввод! Введите §aY§c или §cN§c.");
+                .getString("confirmation-invalid-input", "§cInvalid input. Please enter &aY &cor &cN.");
         api.getConfirmationManager().requestConfirmation(
                 sender,
                 Map.of(
                         "y", s -> {
                             api.getDiscordBotService().deleteAllCommands();
                             String deletedAllMsg = api.getConfigManager().getMessages()
-                                    .getString("discord-command-delete-all", "§aВсе команды в Discord были удалены!");
+                                    .getString("discord-command-delete-all", "§aAll commands in Discord have been unlinked!");
                             s.sendMessage(DETools.prefix(DETools.rc(deletedAllMsg)));
                         },
                         "n", s -> {
                             String canceledMsg = api.getConfigManager().getMessages()
-                                    .getString("discord-command-delete-cancel", "§cУдаление команд отменено.");
+                                    .getString("discord-command-delete-cancel", "§cCommand unlinking cancelled.");
                             s.sendMessage(DETools.prefix(DETools.rc(canceledMsg)));
                         }
                 ),
@@ -66,11 +66,11 @@ public class DiscordCommand extends DefaultCommand {
         return true;
     }
 
-
     @Override
     public List<String> getTabCompletions(@NotNull DECommandSender sender, @NotNull String label, @NotNull String[] args) {
         if (args.length == 1) return List.of("command");
         if (args.length == 2) return List.of("delete");
         return List.of();
     }
+
 }

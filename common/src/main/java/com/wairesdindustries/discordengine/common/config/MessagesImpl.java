@@ -77,5 +77,4 @@ public class MessagesImpl implements Messages {
 
         return this.configManager.load(defaultLang);
     }
-
 }

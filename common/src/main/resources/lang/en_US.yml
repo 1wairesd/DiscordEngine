@@ -1,3 +1,7 @@
+config: # Please do not touch this section
+  version: 1
+  type: lang
+
 prefix: "&7[&bDiscordEngine&7] &r"
 config-reloaded: '&aConfig reloaded!'
 no-permission: '&cYou do not have permissions!'

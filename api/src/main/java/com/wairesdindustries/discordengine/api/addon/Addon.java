@@ -41,4 +41,5 @@ public interface Addon {
      */
     @NotNull
     File getDataFolder();
+
 }

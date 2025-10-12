@@ -12,4 +12,5 @@ public interface DEOfflinePlayer {
     @NotNull Object getHandler();
 
     @NotNull UUID getUniqueId();
+
 }

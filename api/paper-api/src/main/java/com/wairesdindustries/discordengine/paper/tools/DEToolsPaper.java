@@ -50,5 +50,4 @@ public abstract class DEToolsPaper extends DETools {
         if (string != null) def = fromRGBString(parseRGB(string), def);
         return def;
     }
-
 }

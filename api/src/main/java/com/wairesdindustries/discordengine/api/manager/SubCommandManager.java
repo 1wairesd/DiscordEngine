@@ -23,9 +23,7 @@ public interface SubCommandManager {
 
 	void unregisterAll();
 
-
     @NotNull
     Map<String, SubCommand> getMap();
+
 }
-
-

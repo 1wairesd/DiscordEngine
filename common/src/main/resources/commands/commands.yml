@@ -1,8 +1,12 @@
+config: # Please do not touch this section
+  version: 1
+  type: discord-command
+
 commands:
   hello:
-    description: "Приветствует пользователя"
-    type: "both" # slash | prefix | both
-    context: "server" # server | dm | both
+    trigger: "hello"
+    description: "Welcomes the user"
+    context: "server"
     actions:
-      - send_message:
-          content: "👋 Привет, {user}!"
+    -  send_message:
+         content: "👋 Hello!"

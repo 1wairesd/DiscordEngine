@@ -33,7 +33,4 @@ public interface ConfigManager extends Loadable {
 
     @Nullable ConfigurationNode getNode(@NotNull String name);
 
-
 }
-
-

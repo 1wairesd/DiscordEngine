@@ -9,4 +9,5 @@ public interface DEPlayer extends DECommandSender, DEOfflinePlayer {
     void openInventory(Object inventory);
 
     void closeInventory();
+
 }

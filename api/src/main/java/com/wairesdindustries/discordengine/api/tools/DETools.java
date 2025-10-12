@@ -76,5 +76,4 @@ public abstract class DETools {
             sender.sendMessage(message);
         }
     }
-
 }

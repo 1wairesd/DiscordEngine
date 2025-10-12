@@ -35,4 +35,5 @@ public interface Config {
     boolean delete();
 
     void save() throws ConfigurateException;
+
 }

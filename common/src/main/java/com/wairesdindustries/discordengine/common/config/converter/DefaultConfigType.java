@@ -26,6 +26,10 @@ public enum DefaultConfigType implements ConfigType {
         // миграторы будут добавлены позже
     }}),
 
+    DISCORD_COMMAND(1, new HashMap<Integer, ConfigMigrator>() {{
+        // миграторы будут добавлены позже
+    }}),
+
     UNKNOWN(true, new UnknownMigrator());
 
     private int latestVersion;
@@ -39,7 +43,7 @@ public enum DefaultConfigType implements ConfigType {
     public static DefaultConfigType getType(String name) {
         if (name != null) {
             try {
-                return valueOf(name.toUpperCase());
+                return valueOf(name.toUpperCase().replace("-", "_"));
             } catch (IllegalArgumentException ex) {
                 return UNKNOWN_CUSTOM;
             }

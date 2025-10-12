@@ -22,5 +22,4 @@ public class DiscordCommandContextImpl implements DiscordCommandContext {
             messageEvent.getChannel().sendMessage(message).queue();
         }
     }
-
 }

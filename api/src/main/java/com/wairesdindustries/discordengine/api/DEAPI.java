@@ -32,6 +32,4 @@ public abstract class DEAPI {
 
     public abstract @NotNull EventBus getEventBus();
 
-
-
 }

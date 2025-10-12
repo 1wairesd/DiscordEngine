@@ -20,4 +20,5 @@ public interface Messages {
     List<String> getStringList(@NotNull String path);
 
     void load(@NotNull String language) throws ConfigurateException;
+
 }

@@ -13,4 +13,5 @@ public interface DECommandSender {
 	void sendMessage(@NotNull String message);
 
 	boolean isConsole();
+
 }

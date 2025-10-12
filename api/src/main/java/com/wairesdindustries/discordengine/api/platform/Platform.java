@@ -23,4 +23,5 @@ public interface Platform extends Addon {
     Logger getLogger();
 
     @NotNull Scheduler getScheduler();
+
 }
