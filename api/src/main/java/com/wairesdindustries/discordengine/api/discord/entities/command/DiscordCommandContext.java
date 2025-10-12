@@ -1,4 +1,4 @@
-package com.wairesdindustries.discordengine.api.discord.command;
+package com.wairesdindustries.discordengine.api.discord.entities.command;
 
 public interface DiscordCommandContext {
 

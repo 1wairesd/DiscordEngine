@@ -1,8 +1,8 @@
-package com.wairesdindustries.discordengine.common.discord.command;
+package com.wairesdindustries.discordengine.common.discord.entities.command;
 
-import com.wairesdindustries.discordengine.api.discord.command.DiscordCommand;
-import com.wairesdindustries.discordengine.api.discord.command.DiscordCommandContext;
-import com.wairesdindustries.discordengine.api.discord.actions.DiscordAction;
+import com.wairesdindustries.discordengine.api.discord.entities.command.DiscordCommand;
+import com.wairesdindustries.discordengine.api.discord.entities.command.DiscordCommandContext;
+import com.wairesdindustries.discordengine.api.discord.entities.actions.DiscordAction;
 
 import java.util.List;
 

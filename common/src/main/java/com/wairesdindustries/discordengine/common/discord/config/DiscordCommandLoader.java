@@ -2,11 +2,11 @@ package com.wairesdindustries.discordengine.common.discord.config;
 
 import com.wairesdindustries.discordengine.api.config.Config;
 import com.wairesdindustries.discordengine.api.config.Loadable;
-import com.wairesdindustries.discordengine.api.discord.actions.DiscordAction;
+import com.wairesdindustries.discordengine.api.discord.entities.actions.DiscordAction;
 import com.wairesdindustries.discordengine.common.DiscordEngine;
 import com.wairesdindustries.discordengine.common.config.converter.DefaultConfigType;
-import com.wairesdindustries.discordengine.common.discord.actions.DiscordSendMessageAction;
-import com.wairesdindustries.discordengine.common.discord.command.DiscordCommandImpl;
+import com.wairesdindustries.discordengine.common.discord.entities.actions.DiscordSendMessageAction;
+import com.wairesdindustries.discordengine.common.discord.entities.command.DiscordCommandImpl;
 import org.spongepowered.configurate.ConfigurationNode;
 
 import java.io.File;

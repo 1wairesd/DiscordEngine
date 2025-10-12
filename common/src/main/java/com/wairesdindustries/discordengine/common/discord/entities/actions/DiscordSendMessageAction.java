@@ -1,7 +1,7 @@
-package com.wairesdindustries.discordengine.common.discord.actions;
+package com.wairesdindustries.discordengine.common.discord.entities.actions;
 
-import com.wairesdindustries.discordengine.api.discord.command.DiscordCommandContext;
-import com.wairesdindustries.discordengine.api.discord.actions.DiscordAction;
+import com.wairesdindustries.discordengine.api.discord.entities.command.DiscordCommandContext;
+import com.wairesdindustries.discordengine.api.discord.entities.actions.DiscordAction;
 
 public class DiscordSendMessageAction implements DiscordAction {
 

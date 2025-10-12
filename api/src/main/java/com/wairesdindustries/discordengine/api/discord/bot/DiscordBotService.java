@@ -6,14 +6,6 @@ public interface DiscordBotService {
 
     void close();
 
-    void updateActivity();
-
     boolean isRunning();
-
-    void deleteCommand(String trigger);
-
-    void deleteAllCommands();
-
-    void updateAvatar();
 
 }

@@ -46,8 +46,8 @@ public class ReloadCommand extends DefaultCommand {
     }
 
     private void refreshBotStatus() {
-        api.getDiscordBotService().updateAvatar();
-        api.getDiscordBotService().updateActivity();
+        api.getDiscordAvatarService().updateAvatar();
+        api.getDiscordAvatarService().updateActivity("Discord Engine");
     }
 
 }

@@ -1,7 +1,9 @@
 package com.wairesdindustries.discordengine.api;
 
 import com.wairesdindustries.discordengine.api.config.Loadable;
+import com.wairesdindustries.discordengine.api.discord.bot.DiscordAvatar;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotService;
+import com.wairesdindustries.discordengine.api.discord.bot.DiscordMessaging;
 import com.wairesdindustries.discordengine.api.discord.command.DiscordCommandManager;
 import com.wairesdindustries.discordengine.api.event.EventBus;
 import com.wairesdindustries.discordengine.api.manager.SubCommandManager;
@@ -31,5 +33,9 @@ public abstract class DEAPI {
     public abstract @NotNull DiscordBotService getDiscordBotService();
 
     public abstract @NotNull EventBus getEventBus();
+
+    public abstract @NotNull DiscordAvatar getDiscordAvatarService();
+
+    public abstract @NotNull DiscordMessaging getDiscordMessagingService();
 
 }

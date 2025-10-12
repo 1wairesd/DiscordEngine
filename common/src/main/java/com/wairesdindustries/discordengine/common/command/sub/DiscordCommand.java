@@ -29,7 +29,7 @@ public class DiscordCommand extends DefaultCommand {
 
         if (args.length >= 3) {
             String trigger = args[2];
-            api.getDiscordBotService().deleteCommand(trigger);
+            api.getDiscordMessagingService().deleteCommand(trigger);
 
             String template = api.getConfigManager().getMessages()
                     .getString("discord-command-deleted", "&aCommand %trigger% unlinked in Discord!");
@@ -48,7 +48,7 @@ public class DiscordCommand extends DefaultCommand {
                 sender,
                 Map.of(
                         "y", s -> {
-                            api.getDiscordBotService().deleteAllCommands();
+                            api.getDiscordMessagingService().deleteAllCommands();
                             String deletedAllMsg = api.getConfigManager().getMessages()
                                     .getString("discord-command-delete-all", "§aAll commands in Discord have been unlinked!");
                             s.sendMessage(DETools.prefix(DETools.rc(deletedAllMsg)));

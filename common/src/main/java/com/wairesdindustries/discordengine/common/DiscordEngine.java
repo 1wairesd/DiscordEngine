@@ -9,7 +9,9 @@ import com.wairesdindustries.discordengine.api.manager.SubCommandManager;
 import com.wairesdindustries.discordengine.api.platform.DEConfirmationManager;
 import com.wairesdindustries.discordengine.common.config.ConfigManagerImpl;
 import com.wairesdindustries.discordengine.common.confirmation.DEConfirmationManagerImpl;
+import com.wairesdindustries.discordengine.common.discord.bot.DiscordAvatarImpl;
 import com.wairesdindustries.discordengine.common.discord.bot.DiscordBotServiceImpl;
+import com.wairesdindustries.discordengine.common.discord.bot.DiscordMessagingImpl;
 import com.wairesdindustries.discordengine.common.discord.command.DiscordCommandManagerImpl;
 import com.wairesdindustries.discordengine.common.discord.config.DiscordCommandLoader;
 import com.wairesdindustries.discordengine.common.event.EventBusImpl;
@@ -25,10 +27,12 @@ public final class DiscordEngine extends DEAPI {
     private final ConfigManagerImpl configManager;
     private final DiscordCommandLoader commandLoader;
     private final DiscordCommandManagerImpl commandManager;
-    private final DiscordBotServiceImpl botService;
     private final EventBusImpl eventBus;
     private final EventListener eventListener;
     private final DEConfirmationManagerImpl confirmationManager;
+    private final DiscordBotServiceImpl botService;
+    private final DiscordMessagingImpl messagingService;
+    private final DiscordAvatarImpl avatarService;
 
     public DiscordEngine(BackendPlatform platform) {
         this.platform = platform;
@@ -36,8 +40,10 @@ public final class DiscordEngine extends DEAPI {
         this.configManager = new ConfigManagerImpl(platform);
         this.subCommandManager = new SubCommandManagerImpl(this);
         this.commandLoader = new DiscordCommandLoader(this);
-        this.commandManager = new DiscordCommandManagerImpl(this);
         this.botService = new DiscordBotServiceImpl(this);
+        this.messagingService = new DiscordMessagingImpl(this.botService);
+        this.avatarService = new DiscordAvatarImpl(this.botService, this);
+        this.commandManager = new DiscordCommandManagerImpl(this);
         this.eventBus = new EventBusImpl(platform.getLogger());
         this.eventListener = new EventListener(this);
         this.confirmationManager = new DEConfirmationManagerImpl(this);
@@ -50,7 +56,6 @@ public final class DiscordEngine extends DEAPI {
         configManager.load();
         commandLoader.load();
         botService.connect();
-        commandManager.registerAll();
         eventBus.register(eventListener);
         platform.getLogger().info("Enabled in " + (System.currentTimeMillis() - time) + "ms");
     }
@@ -98,6 +103,16 @@ public final class DiscordEngine extends DEAPI {
     @Override
     public @NotNull DEConfirmationManager getConfirmationManager() {
         return confirmationManager;
+    }
+
+    @Override
+    public @NotNull DiscordMessagingImpl getDiscordMessagingService() {
+        return messagingService;
+    }
+
+    @Override
+    public @NotNull DiscordAvatarImpl getDiscordAvatarService() {
+        return avatarService;
     }
 
 }
