@@ -1,7 +1,7 @@
-package com.wairesdindustries.discordengine.common.discord.commands;
+package com.wairesdindustries.discordengine.common.discord.command;
 
-import com.wairesdindustries.discordengine.api.discord.commands.DiscordCommand;
-import com.wairesdindustries.discordengine.api.discord.commands.DiscordCommandManager;
+import com.wairesdindustries.discordengine.api.discord.command.DiscordCommand;
+import com.wairesdindustries.discordengine.api.discord.command.DiscordCommandManager;
 import com.wairesdindustries.discordengine.common.DiscordEngine;
 import com.wairesdindustries.discordengine.common.discord.bot.DiscordBotServiceImpl;
 import net.dv8tion.jda.api.JDA;

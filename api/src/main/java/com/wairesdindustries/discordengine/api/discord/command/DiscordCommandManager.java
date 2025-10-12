@@ -1,4 +1,4 @@
-package com.wairesdindustries.discordengine.api.discord.commands;
+package com.wairesdindustries.discordengine.api.discord.command;
 
 public interface DiscordCommandManager {
 

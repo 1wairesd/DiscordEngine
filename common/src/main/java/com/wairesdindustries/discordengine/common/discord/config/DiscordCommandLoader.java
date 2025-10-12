@@ -6,7 +6,7 @@ import com.wairesdindustries.discordengine.api.discord.actions.DiscordAction;
 import com.wairesdindustries.discordengine.common.DiscordEngine;
 import com.wairesdindustries.discordengine.common.config.converter.DefaultConfigType;
 import com.wairesdindustries.discordengine.common.discord.actions.DiscordSendMessageAction;
-import com.wairesdindustries.discordengine.common.discord.commands.DiscordCommandImpl;
+import com.wairesdindustries.discordengine.common.discord.command.DiscordCommandImpl;
 import org.spongepowered.configurate.ConfigurationNode;
 
 import java.io.File;

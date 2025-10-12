@@ -2,7 +2,7 @@ package com.wairesdindustries.discordengine.common;
 
 import com.wairesdindustries.discordengine.api.DEAPI;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotService;
-import com.wairesdindustries.discordengine.api.discord.commands.DiscordCommandManager;
+import com.wairesdindustries.discordengine.api.discord.command.DiscordCommandManager;
 import com.wairesdindustries.discordengine.api.event.EventBus;
 import com.wairesdindustries.discordengine.api.manager.ConfigManager;
 import com.wairesdindustries.discordengine.api.manager.SubCommandManager;
@@ -10,7 +10,7 @@ import com.wairesdindustries.discordengine.api.platform.DEConfirmationManager;
 import com.wairesdindustries.discordengine.common.config.ConfigManagerImpl;
 import com.wairesdindustries.discordengine.common.confirmation.DEConfirmationManagerImpl;
 import com.wairesdindustries.discordengine.common.discord.bot.DiscordBotServiceImpl;
-import com.wairesdindustries.discordengine.common.discord.commands.DiscordCommandManagerImpl;
+import com.wairesdindustries.discordengine.common.discord.command.DiscordCommandManagerImpl;
 import com.wairesdindustries.discordengine.common.discord.config.DiscordCommandLoader;
 import com.wairesdindustries.discordengine.common.event.EventBusImpl;
 import com.wairesdindustries.discordengine.common.event.EventListener;

@@ -1,6 +1,6 @@
-package com.wairesdindustries.discordengine.common.discord.commands;
+package com.wairesdindustries.discordengine.common.discord.command;
 
-import com.wairesdindustries.discordengine.api.discord.commands.DiscordCommandContext;
+import com.wairesdindustries.discordengine.api.discord.command.DiscordCommandContext;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
