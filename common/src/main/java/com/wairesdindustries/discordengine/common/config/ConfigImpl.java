@@ -2,40 +2,73 @@ package com.wairesdindustries.discordengine.common.config;
 
 import com.wairesdindustries.discordengine.api.config.Config;
 import com.wairesdindustries.discordengine.api.config.converter.ConfigType;
+import com.wairesdindustries.discordengine.api.data.config.ConfigSerializer;
+import com.wairesdindustries.discordengine.common.config.converter.DefaultConfigType;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.objectmapping.ObjectMapper;
+import org.spongepowered.configurate.serialize.SerializationException;
+import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
-import java.io.IOException;
 
 public class ConfigImpl implements Config {
-
     private final File file;
     private final YamlConfigurationLoader loader;
     private ConfigurationNode node;
-    private ConfigType type = DefaultConfigType.DEFAULT;
+    private ConfigType type;
     private int version = 1;
     private Object serialized;
+    private boolean deleted;
 
     public ConfigImpl(File file) {
-        this.file = file;
-        this.loader = YamlConfigurationLoader.builder().file(file).build();
+        this(file, null);
     }
 
-    @Override
-    public <T> T getSerialized(Class<T> clazz) {
-        if (serialized != null && clazz.isInstance(serialized)) return clazz.cast(serialized);
+    public ConfigImpl(File file, ConfigType type) {
+        this.file = file;
+        this.type = type;
+        this.loader = YamlConfigurationLoader.builder()
+            .file(file)
+            .nodeStyle(NodeStyle.BLOCK)
+            .defaultOptions(opts -> opts.serializers(builder -> builder.registerAnnotatedObjects(ObjectMapper.factory())))
+            .build();
+    }
 
-        try {
-            T obj = node.get(clazz);
-            serialized = obj;
-            return obj;
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to serialize config: " + file.getName(), e);
+    private void setMeta() throws SerializationException {
+        ConfigurationNode metaNode = node.node("config");
+        String version = metaNode.node("version").getString();
+
+        if (version != null) {
+            this.version = parse(version);
+            if (this.type == null)
+                this.type = DefaultConfigType.getType(metaNode.node("type").getString());
+        }
+
+        ConfigSerializer configSerializer = type.getConfigSerializer();
+        if (configSerializer != null) {
+            this.serialized = node(configSerializer.path()).get(configSerializer.serializer());
         }
     }
 
+    @Override
+    public void load() throws ConfigurateException {
+        node = loader.load();
+        setMeta();
+    }
+
+    private int parse(String string) {
+        if (string == null) return 0;
+        if (string.contains(".")) string = string.replace(".", "");
+        return Integer.parseInt(string);
+    }
+
+    @Override
+    public @Nullable <T> T getSerialized(Class<T> clazz) {
+        return clazz.cast(serialized);
+    }
 
     @Override
     public ConfigurationNode node() {
@@ -68,25 +101,15 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public void load() throws ConfigurateException {
-        try {
-            node = loader.load();
-        } catch (IOException e) {
-            throw new ConfigurateException("Failed to load config: " + file.getName(), e);
-        }
-    }
-
-    @Override
     public boolean delete() {
-        return file.delete();
+        deleted = file.delete();
+        return deleted;
     }
 
     @Override
     public void save() throws ConfigurateException {
-        try {
+        if (!deleted) {
             loader.save(node);
-        } catch (IOException e) {
-            throw new ConfigurateException("Failed to save config: " + file.getName(), e);
         }
     }
 }

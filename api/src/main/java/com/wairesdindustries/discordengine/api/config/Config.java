@@ -20,13 +20,6 @@ public interface Config {
         return null;
     }
 
-    default String getNameWithoutExtension() {
-        String name = file().getName();
-        int dotIndex = name.lastIndexOf('.');
-        if (dotIndex > 0) return name.substring(0, dotIndex);
-        return name;
-    }
-
     File file();
 
     String path();

@@ -1,5 +1,6 @@
 package com.wairesdindustries.discordengine.common.config;
 
+import com.wairesdindustries.discordengine.api.config.Config;
 import com.wairesdindustries.discordengine.api.config.Messages;
 import com.wairesdindustries.discordengine.api.config.converter.ConfigType;
 import com.wairesdindustries.discordengine.api.config.converter.ConvertOrder;
@@ -7,6 +8,7 @@ import com.wairesdindustries.discordengine.api.data.config.ConfigData;
 import com.wairesdindustries.discordengine.api.event.plugin.DiscordEngineReloadEvent;
 import com.wairesdindustries.discordengine.api.manager.ConfigManager;
 import com.wairesdindustries.discordengine.common.config.converter.ConfigConverter;
+import com.wairesdindustries.discordengine.common.config.converter.DefaultConfigType;
 import com.wairesdindustries.discordengine.common.platform.BackendPlatform;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +24,7 @@ import java.util.logging.Level;
 
 public class ConfigManagerImpl implements ConfigManager {
 
+    private ConfigData configData;
     private final Map<String, ConfigImpl> configurations = new HashMap<>();
     private static final String[] defaultFiles = {
             "Config.yml",
@@ -53,8 +56,6 @@ public class ConfigManagerImpl implements ConfigManager {
                 return;
             }
             messages.load(config.language());
-
-
         } catch (ConfigurateException e) {
             platform.getLogger().log(Level.WARNING, "Error with loading configuration: ", e);
         }
@@ -104,11 +105,20 @@ public class ConfigManagerImpl implements ConfigManager {
     }
 
     private ConfigData getConfig(boolean refresh) {
-        ConfigImpl config = getConfig("Config.yml");
+        if (!refresh && configData != null) return configData;
+
+        Config config = getConfig("Config.yml");
+
         if (config == null) {
-            throw new IllegalStateException("Config.yml not loaded!");
+            config = getConfig(DefaultConfigType.CONFIG).orElse(null);
+            if (config == null) {
+                throw new IllegalStateException("DiscordEngine config is null!");
+            }
         }
-        return config.getSerialized(ConfigData.class);
+
+        configData = config.getSerialized(ConfigData.class);
+
+        return configData;
     }
 
     @Override

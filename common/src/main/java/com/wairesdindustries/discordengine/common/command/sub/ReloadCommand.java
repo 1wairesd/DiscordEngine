@@ -37,13 +37,17 @@ public class ReloadCommand extends DefaultCommand {
         api.getConfigManager().load();
 
         refreshDiscordCommands();
-
-        api.getDiscordBotService().updateActivity();
+        refreshBotStatus();
     }
 
     private void refreshDiscordCommands() {
         api.getDiscordCommandLoader().load();
         api.getDiscordCommandManager().registerAll();
+    }
+
+    private void refreshBotStatus() {
+        api.getDiscordBotService().updateAvatar();
+        api.getDiscordBotService().updateActivity();
     }
 
 }

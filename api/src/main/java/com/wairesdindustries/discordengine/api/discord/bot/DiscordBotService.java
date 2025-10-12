@@ -7,4 +7,5 @@ public interface DiscordBotService {
     boolean isRunning();
     void deleteCommand(String trigger);
     void deleteAllCommands();
+    void updateAvatar();
 }

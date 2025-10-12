@@ -6,7 +6,6 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true, chain = false)
 @Getter
 public class ConfigSerializer {
-
     private final Class<?> serializer;
     private final Object[] path;
 

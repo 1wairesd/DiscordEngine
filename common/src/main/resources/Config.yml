@@ -1,5 +1,11 @@
+config: # Please do not touch this section
+  version: 1
+  type: config
+
 bot:
-  key: "your-bot-token-here"
-  Activity: "DiscordEngine"
+  token: "your-bot-token"
+  activity: "Discord Engine"
+  avatar: "avatar-discordengine-nofon.png"
 
 language: "en_US"
+addonsHelp: true
