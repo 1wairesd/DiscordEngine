@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm'
 }
 
 group = 'com.wairesdindustries.discordengine'
@@ -12,12 +11,12 @@ repositories {
 }
 
 dependencies {
-    implementation "org.spongepowered:configurate-yaml:4.1.2"
-    implementation "net.kyori:event-api:3.0.0"
-    compileOnly "org.jetbrains:annotations:24.0.1"
-    compileOnly "org.projectlombok:lombok:1.18.34"
-    annotationProcessor "org.projectlombok:lombok:1.18.34"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compileOnly("org.spongepowered:configurate-yaml:4.2.0")
+    compileOnly("net.kyori:event-api:3.0.0")
+    compileOnly("org.jetbrains:annotations:24.0.1")
+
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
 }
 
 def generatedDir = "$buildDir/generated/sources/buildconstants/java"

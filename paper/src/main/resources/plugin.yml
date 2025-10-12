@@ -6,7 +6,11 @@ authors: [1wairesd]
 
 libraries:
   - net.dv8tion:JDA:5.6.1
-  - org.yaml:snakeyaml:2.2
+  - org.yaml:snakeyaml:2.5
+  - org.spongepowered:configurate-core:4.2.0
+  - org.spongepowered:configurate-yaml:4.2.0
+  - net.kyori:event-api:3.0.0
+  - net.kyori:event-method:3.0.0
 
 commands:
   discordengine:
