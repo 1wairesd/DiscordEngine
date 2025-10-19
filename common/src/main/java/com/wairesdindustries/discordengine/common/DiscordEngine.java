@@ -1,7 +1,9 @@
 package com.wairesdindustries.discordengine.common;
 
 import com.wairesdindustries.discordengine.api.DEAPI;
+import com.wairesdindustries.discordengine.api.discord.bot.DiscordAvatar;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotService;
+import com.wairesdindustries.discordengine.api.discord.bot.DiscordMessaging;
 import com.wairesdindustries.discordengine.api.discord.command.DiscordCommandManager;
 import com.wairesdindustries.discordengine.api.event.EventBus;
 import com.wairesdindustries.discordengine.api.manager.ConfigManager;
@@ -30,9 +32,9 @@ public final class DiscordEngine extends DEAPI {
     private final EventBusImpl eventBus;
     private final EventListener eventListener;
     private final DEConfirmationManagerImpl confirmationManager;
-    private final DiscordBotServiceImpl botService;
-    private final DiscordMessagingImpl messagingService;
-    private final DiscordAvatarImpl avatarService;
+    private final DiscordBotService botService;
+    private final DiscordMessaging messagingService;
+    private final DiscordAvatar avatarService;
 
     public DiscordEngine(BackendPlatform platform) {
         this.platform = platform;
@@ -55,7 +57,7 @@ public final class DiscordEngine extends DEAPI {
         long time = System.currentTimeMillis();
         configManager.load();
         commandLoader.load();
-        botService.connect();
+        botService.connect().join();
         eventBus.register(eventListener);
         platform.getLogger().info("Enabled in " + (System.currentTimeMillis() - time) + "ms");
     }
@@ -106,12 +108,12 @@ public final class DiscordEngine extends DEAPI {
     }
 
     @Override
-    public @NotNull DiscordMessagingImpl getDiscordMessagingService() {
+    public @NotNull DiscordMessaging getDiscordMessagingService() {
         return messagingService;
     }
 
     @Override
-    public @NotNull DiscordAvatarImpl getDiscordAvatarService() {
+    public @NotNull DiscordAvatar getDiscordAvatarService() {
         return avatarService;
     }
 

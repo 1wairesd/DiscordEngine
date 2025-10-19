@@ -4,7 +4,6 @@ import com.wairesdindustries.discordengine.api.discord.entities.command.DiscordC
 import com.wairesdindustries.discordengine.api.discord.command.DiscordCommandManager;
 import com.wairesdindustries.discordengine.common.DiscordEngine;
 import com.wairesdindustries.discordengine.common.discord.entities.command.DiscordCommandContextImpl;
-import com.wairesdindustries.discordengine.common.discord.entities.command.DiscordCommandImpl;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
@@ -25,31 +24,32 @@ public class DiscordCommandManagerImpl extends ListenerAdapter implements Discor
 
     @Override
     public void registerCommand(DiscordCommand command) {
-        if (command instanceof DiscordCommandImpl c) {
-            commands.put(c.getTrigger(), c);
-        }
+        commands.put(command.getTrigger(), command);
     }
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         JDA jda = event.getJDA();
         for (DiscordCommand cmd : commands.values()) {
-            if (cmd instanceof DiscordCommandImpl c) {
-                jda.upsertCommand(c.getTrigger(), c.getDescription()).queue();
-            }
+            jda.upsertCommand(cmd.getTrigger(), cmd.getDescription()).queue();
         }
     }
 
     @Override
     public void registerAll() {
-        // This is now handled by the onReady event
     }
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         DiscordCommand command = commands.get(event.getName());
         if (command != null) {
-            command.execute(new DiscordCommandContextImpl(event));
+            java.util.concurrent.CompletableFuture.runAsync(() -> {
+                try {
+                    command.execute(new DiscordCommandContextImpl(event));
+                } catch (Exception e) {
+                    event.reply("An error occurred while executing the command").setEphemeral(true).queue();
+                }
+            });
         }
     }
 }

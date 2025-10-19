@@ -6,10 +6,14 @@ import com.wairesdindustries.discordengine.common.DiscordEngine;
 import com.wairesdindustries.discordengine.common.discord.event.EventListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.spongepowered.configurate.serialize.SerializationException;
 
+import java.io.File;
 import java.util.EnumSet;
+import java.util.concurrent.CompletableFuture;
 
 public class DiscordBotServiceImpl implements DiscordBotService {
 
@@ -21,25 +25,32 @@ public class DiscordBotServiceImpl implements DiscordBotService {
     }
 
     @Override
-    public void connect() {
-        try {
-            ConfigData.Bot botConfig = api.getConfigManager()
-                    .getConfig("Config.yml")
-                    .node("bot")
-                    .get(ConfigData.Bot.class);
+    public CompletableFuture<Void> connect() {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        
+        CompletableFuture.runAsync(() -> {
+            try {
+                ConfigData.Bot botConfig = api.getConfigManager()
+                        .getConfig("Config.yml")
+                        .node("bot")
+                        .get(ConfigData.Bot.class);
 
-            String token = botConfig != null ? botConfig.token() : null;
+                String token = botConfig != null ? botConfig.token() : null;
 
-            this.jda = JDABuilder.createDefault(token, EnumSet.of(
-                    GatewayIntent.GUILD_MESSAGES,
-                    GatewayIntent.MESSAGE_CONTENT
-                            ))
-                    .addEventListeners(new EventListener(api), api.getDiscordCommandManager())
-                    .build();
+                this.jda = JDABuilder.createDefault(token, EnumSet.of(
+                        GatewayIntent.GUILD_MESSAGES,
+                        GatewayIntent.MESSAGE_CONTENT
+                                ))
+                        .addEventListeners(new EventListener(api), api.getDiscordCommandManager())
+                        .build();
 
-        } catch (SerializationException e) {
-            throw new RuntimeException("Failed to load bot configuration", e);
-        }
+                future.complete(null);
+            } catch (SerializationException e) {
+                future.completeExceptionally(e);
+            }
+        });
+        
+        return future;
     }
 
     @Override
@@ -55,14 +66,30 @@ public class DiscordBotServiceImpl implements DiscordBotService {
         return jda != null && jda.getStatus() == JDA.Status.CONNECTED;
     }
     
-    /**
-     * Provides the JDA instance to other services within the same package.
-     * @return The JDA instance.
-     */
-    JDA getJda() {
-        if (!isRunning()) {
-            throw new IllegalStateException("JDA is not running or connected.");
+    @Override
+    public void sendMessageToChannel(String channelId, String message) {
+        if (jda != null && jda.getStatus() == JDA.Status.CONNECTED) {
+            jda.getTextChannelById(channelId).sendMessage(message).queue();
         }
-        return jda;
+    }
+
+    @Override
+    public void updateAvatar(String avatarPath) {
+        if (jda != null && jda.getStatus() == JDA.Status.CONNECTED) {
+            try {
+                File avatarFile = new java.io.File(avatarPath);
+                if (avatarFile.exists()) {
+                    jda.getSelfUser().getManager().setAvatar(Icon.from(avatarFile)).queue();
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    @Override
+    public void updateActivity(String activity) {
+        if (jda != null && jda.getStatus() == JDA.Status.CONNECTED) {
+            jda.getPresence().setActivity(Activity.playing(activity));
+        }
     }
 }

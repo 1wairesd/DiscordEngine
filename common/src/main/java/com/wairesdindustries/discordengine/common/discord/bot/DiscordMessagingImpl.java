@@ -1,50 +1,37 @@
 package com.wairesdindustries.discordengine.common.discord.bot;
 
+import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotService;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordMessaging;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.util.concurrent.CompletableFuture;
 
 public class DiscordMessagingImpl implements DiscordMessaging {
 
-    private final DiscordBotServiceImpl botService;
+    private final DiscordBotService botService;
 
-    public DiscordMessagingImpl(DiscordBotServiceImpl botService) {
+    public DiscordMessagingImpl(DiscordBotService botService) {
         this.botService = botService;
-    }
-
-    private JDA getJda() {
-        return botService.getJda();
     }
 
     @Override
     public CompletableFuture<Void> sendMessageToChannel(String channelId, String message) {
-        TextChannel channel = getJda().getTextChannelById(channelId);
-        if (channel == null) {
-            return CompletableFuture.failedFuture(new IllegalArgumentException("Channel not found: " + channelId));
-        }
         CompletableFuture<Void> cf = new CompletableFuture<>();
-        channel.sendMessage(message).queue(s -> cf.complete(null), cf::completeExceptionally);
+        try {
+            botService.sendMessageToChannel(channelId, message);
+            cf.complete(null);
+        } catch (Exception e) {
+            cf.completeExceptionally(e);
+        }
         return cf;
     }
 
     @Override
     public CompletableFuture<Void> deleteCommand(String trigger) {
-        CompletableFuture<Void> cf = new CompletableFuture<>();
-        getJda().retrieveCommands().queue(commands -> {
-            commands.stream()
-                    .filter(c -> c.getName().equalsIgnoreCase(trigger))
-                    .forEach(c -> getJda().deleteCommandById(c.getId()).queue());
-            cf.complete(null);
-        });
-        return cf;
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
     public CompletableFuture<Void> deleteAllCommands() {
-        CompletableFuture<Void> cf = new CompletableFuture<>();
-        getJda().updateCommands().queue(s -> cf.complete(null), cf::completeExceptionally);
-        return cf;
+        return CompletableFuture.completedFuture(null);
     }
 }
