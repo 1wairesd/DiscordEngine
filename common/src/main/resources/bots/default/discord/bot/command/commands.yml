@@ -8,5 +8,5 @@ commands:
     description: "Welcomes the user"
     context: "server"
     actions:
-    -  send_message:
-         content: "👋 Hello!"
+      -  send_message:
+           content: "👋 Hello!"

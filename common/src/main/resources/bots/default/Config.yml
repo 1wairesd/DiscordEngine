@@ -1,0 +1,26 @@
+config: # Please do not touch this section
+  version: 1
+  type: config-bot
+
+bot:
+  token: "your-bot-token" # Insert your bot token here
+  activity:
+    text: "Discord Engine" # The text that will be shown in the bot's activity
+    type: "PLAYING" # PLAYING | WATCHING | LISTENING | STREAMING
+    # For STREAMING type only:
+    url: "" # Insert your Twitch "https://twitch.tv/yourchannel" channel URL here (not necessary)
+
+sources:
+  commands:
+    mode: "local" # local | global | both
+    local:
+      - "commands.yml"
+    global:
+      - "commands.yml"
+      - "my-commands/commands.yml"
+  avatar:
+    mode: "local" # local | global
+    file: "avatar-discordengine-nofon.png" # or "/my-avatar/avatar-discordengine-nofon.png"
+  lang:
+    mode: "local" # local | global
+    locale: "en_US.yml" # or "/my-lang/uk_UA.yml"

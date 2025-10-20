@@ -1,6 +1,7 @@
 config: # Please do not touch this section
   version: 1
-  type: config
+  type: bots
 
-language: "en_US"
-addonsHelp: true
+bots:
+  - name: "default"
+    enabled: true

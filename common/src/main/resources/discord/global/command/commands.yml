@@ -1,0 +1,12 @@
+config: # Please do not touch this section
+  version: 1
+  type: discord-command
+
+commands:
+  hello-global:
+    trigger: "hello-global"
+    description: "Welcomes the user for global scope"
+    context: "server"
+    actions:
+      -  send_message:
+           content: "👋 Hello!"
