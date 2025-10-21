@@ -26,8 +26,20 @@ public enum DefaultConfigType implements ConfigType {
         // миграторы будут добавлены позже
     }}),
 
-    DISCORD_COMMAND(1, new HashMap<Integer, ConfigMigrator>() {{
+    DISCORD_BOTS(1, new HashMap<Integer, ConfigMigrator>() {{
         // миграторы будут добавлены позже
+    }}),
+
+    DISCORD_COMMAND_BOT(1, new HashMap<Integer, ConfigMigrator>() {{
+        // миграторы будут добавлены позже
+    }}),
+
+    DISCORD_LANG_BOT(1, new HashMap<Integer, ConfigMigrator>() {{
+       //  миграторы будут добавлены позже
+    }}),
+
+    DISCORD_CONFIG_BOT (1, new HashMap<Integer, ConfigMigrator>() {{
+        //  миграторы будут добавлены позже
     }}),
 
     UNKNOWN(true, new UnknownMigrator());

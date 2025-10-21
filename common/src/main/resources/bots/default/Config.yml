@@ -1,6 +1,6 @@
 config: # Please do not touch this section
   version: 1
-  type: config-bot
+  type: discord-config-bot
 
 bot:
   token: "your-bot-token" # Insert your bot token here

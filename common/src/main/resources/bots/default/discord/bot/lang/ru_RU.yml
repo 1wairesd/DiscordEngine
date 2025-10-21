@@ -1,5 +1,5 @@
 config: # Please do not touch this section
   version: 1
-  type: lang-bot
+  type: discord-lang-bot
 
 command-not-found: "❌ Команда не найдена."
