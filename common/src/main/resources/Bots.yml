@@ -3,5 +3,76 @@ config: # Please do not touch this section
   type: discord-bots
 
 bots:
+  # Default bot configuration
   - name: "default"
     enabled: true
+    description: "Default Discord bot"
+
+  # Example of additional bots (disabled by default)
+  # Uncomment and configure as needed
+
+  # - name: "music"
+  #   enabled: false
+  #   description: "Music bot for voice channels"
+
+  # - name: "utility"
+  #   enabled: false
+  #   description: "Utility bot for various server functions"
+
+# Global settings for the multi-bot system
+settings:
+  # Maximum number of bots that can be active simultaneously
+  max_active_bots: 10
+
+  # Auto-create bot structure when bot is enabled but doesn't exist
+  auto_create_structure: true
+
+  # Validation settings
+  validation:
+    # Enable strict validation mode (will prevent loading bots with warnings)
+    strict_mode: false
+
+    # Warn when bot resources are missing
+    warn_on_missing_resources: true
+
+    # Validate bot tokens (check format, not validity)
+    validate_tokens: true
+
+  # Resource monitoring settings
+  monitoring:
+    # Enable resource usage monitoring
+    enabled: true
+
+    # Memory usage thresholds (in MB)
+    memory_warning_threshold: 1024
+    memory_critical_threshold: 2048
+
+  # Notification settings
+  notifications:
+    # Enable notification system
+    enabled: true
+
+    # Global minimum notification level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    global_minimum_level: "INFO"
+
+    # Handler-specific settings
+    handlers:
+      logging:
+        enabled: true
+        minimum_level: "INFO"
+
+      alerts:
+        enabled: true
+        minimum_level: "ERROR"
+        cooldown_minutes: 5
+
+# Migration settings (for upgrading from single-bot to multi-bot)
+migration:
+  # Enable automatic migration from old configuration format
+  auto_migrate: true
+
+  # Backup old configuration files before migration
+  backup_old_configs: true
+
+  # Default bot name for migrated single-bot configurations
+  default_migrated_bot_name: "default"

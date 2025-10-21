@@ -3,24 +3,72 @@ config: # Please do not touch this section
   type: discord-config-bot
 
 bot:
-  token: "your-bot-token" # Insert your bot token here
-  activity:
-    text: "Discord Engine" # The text that will be shown in the bot's activity
-    type: "PLAYING" # PLAYING | WATCHING | LISTENING | STREAMING
-    # For STREAMING type only:
-    url: "" # Insert your Twitch "https://twitch.tv/yourchannel" channel URL here (not necessary)
+  # Bot token from Discord Developer Portal
+  # IMPORTANT: Replace with your actual bot token
+  token: "your-bot-token"
 
-sources:
-  commands:
-    mode: "local" # local | global | both
-    local:
-      - "commands.yml"
-    global:
-      - "commands.yml"
-      - "my-commands/commands.yml"
-  avatar:
-    mode: "local" # local | global
-    file: "avatar-discordengine-nofon.png" # or "/my-avatar/avatar-discordengine-nofon.png"
-  lang:
-    mode: "local" # local | global
-    locale: "en_US.yml" # or "/my-lang/uk_UA.yml"
+  # Bot activity configuration
+  activity:
+    # Activity text displayed in Discord
+    text: "Discord Engine"
+    # Activity type: PLAYING, LISTENING, WATCHING, STREAMING, COMPETING
+    type: "PLAYING"
+    # URL for streaming activity (only used when type is STREAMING)
+    url: ""
+
+  # Bot resource sources configuration
+  sources:
+    # Commands configuration
+    commands:
+      # Mode: local (load from bot folder) or global (load from global commands folder)
+      mode: "local"
+      # Local command files (relative to bot's command folder)
+      local:
+        - "commands.yml"
+      # Global command files (relative to global commands folder)
+      global:
+        - "commands.yml"
+
+    # Avatar configuration
+    avatar:
+      # Mode: local (load from bot folder) or global (load from global avatar folder)
+      mode: "local"
+      # Avatar file name
+      file: "avatar-discordengine-nofon.png"
+
+    # Language configuration
+    lang:
+      # Mode: local (load from bot folder) or global (load from global lang folder)
+      mode: "local"
+      # Language file name
+      file: "en_US.yml"
+
+# Bot-specific settings
+settings:
+  # Enable this bot
+  enabled: true
+
+  # Bot description
+  description: "Default Discord Engine bot"
+
+  # Auto-reconnect on connection loss
+  auto_reconnect: true
+  # Maximum reconnection attempts
+  max_reconnect_attempts: 5
+
+  # Reconnection delay in seconds
+  reconnect_delay: 30
+
+# Development and debugging settings
+debug:
+  # Enable debug logging for this bot
+  enabled: false
+
+  # Log all Discord API calls
+  log_api_calls: false
+
+  # Log command executions
+  log_commands: true
+
+  # Log bot events
+  log_events: false
