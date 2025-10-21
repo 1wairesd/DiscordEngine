@@ -31,14 +31,14 @@ public class DiscordCommandLoader implements Loadable {
         if (!folder.exists()) folder.mkdirs();
 
         List<Config> commandConfigs = api.getConfigManager().get().values().stream()
-            .filter(config -> config.type() == DefaultConfigType.DISCORD_COMMAND)
+            .filter(config -> config.type() == DefaultConfigType.DISCORD_COMMAND_BOT)
             .collect(Collectors.toList());
 
         if (commandConfigs.isEmpty()) {
             saveDefault();
             api.getConfigManager().load();
             commandConfigs = api.getConfigManager().get().values().stream()
-                .filter(config -> config.type() == DefaultConfigType.DISCORD_COMMAND)
+                .filter(config -> config.type() == DefaultConfigType.DISCORD_COMMAND_BOT)
                 .collect(Collectors.toList());
         }
 
