@@ -4,71 +4,79 @@ config: # Please do not touch this section
 
 bot:
   # Bot token from Discord Developer Portal
-  # IMPORTANT: Replace with your actual bot token
+  # IMPORTANT: Replace with your actual bot token from https://discord.com/developers/applications
   token: "your-bot-token"
 
-  # Bot activity configuration
+  # Bot Activity Configuration
   activity:
-    # Activity text displayed in Discord
+    # Activity text displayed in Discord (e.g., "Playing Discord Engine")
+    # Keep it short and descriptive
     text: "Discord Engine"
-    # Activity type: PLAYING, LISTENING, WATCHING, STREAMING, COMPETING
+    
+    # Activity type - determines the prefix shown in Discord:
+    # - PLAYING: "Playing <text>"
+    # - LISTENING: "Listening to <text>"  
+    # - WATCHING: "Watching <text>"
+    # - STREAMING: "Streaming <text>" (requires url)
+    # - COMPETING: "Competing in <text>"
     type: "PLAYING"
+    
     # URL for streaming activity (only used when type is STREAMING)
+    # Must be a valid Twitch or YouTube URL
     url: ""
 
-  # Bot resource sources configuration
+  # ============================================================================
+  # Resource Sources Configuration
+  # ============================================================================
+  # Configure where this bot loads its resources (commands, avatars, languages)
+  # ============================================================================
   sources:
-    # Commands configuration
     commands:
-      # Mode: local (load from bot folder) or global (load from global commands folder)
-      mode: "local"
-      # Local command files (relative to bot's command folder)
+      # Resource loading mode:
+      # - "local": Load only from this bot's command folder
+      # - "global": Load only from the global commands folder  
+      # - "both": Load from both local and global (local takes priority)
+      mode: "both"
+      
+      # Local command files (relative to bots/<bot-name>/discord/command/)
+      # List all command files this bot should load from its local folder
       local:
         - "commands.yml"
-      # Global command files (relative to global commands folder)
+        # - "custom-commands.yml"  # Uncomment to add more command files
+        # - "admin-commands.yml"   # Example: admin-specific commands
+      
+      # Global command files (relative to discord/global/command/)
+      # List all command files this bot should load from the global folder
+      # These are shared across all bots that use global or both mode
       global:
         - "commands.yml"
+        # - "my-commands/commands.yml"  # Example: commands in subdirectory
+        # - "shared-utilities.yml"      # Example: shared utility commands
 
-    # Avatar configuration
     avatar:
-      # Mode: local (load from bot folder) or global (load from global avatar folder)
+      # Resource loading mode:
+      # - "local": Load from this bot's avatar folder
+      # - "global": Load from the global avatar folder
       mode: "local"
-      # Avatar file name
+      
+      # Avatar file name (without path)
+      # File should exist in the appropriate folder based on mode:
+      # - local mode: bots/<bot-name>/discord/avatar/<file>
+      # - global mode: discord/global/avatar/<file>
       file: "avatar-discordengine-nofon.png"
 
-    # Language configuration
+    # ============================================================================
+    # Language/Localization Configuration  
+    # ============================================================================
     lang:
-      # Mode: local (load from bot folder) or global (load from global lang folder)
+      # Resource loading mode:
+      # - "local": Load from this bot's lang folder
+      # - "global": Load from the global lang folder
       mode: "local"
-      # Language file name
+      
+      # Language file name (without path)
+      # File should exist in the appropriate folder based on mode:
+      # - local mode: bots/<bot-name>/discord/lang/<file>
+      # - global mode: discord/global/lang/<file>
+      # Available languages: en_US.yml, ru_RU.yml, uk_UA.yml
       file: "en_US.yml"
-
-# Bot-specific settings
-settings:
-  # Enable this bot
-  enabled: true
-
-  # Bot description
-  description: "Default Discord Engine bot"
-
-  # Auto-reconnect on connection loss
-  auto_reconnect: true
-  # Maximum reconnection attempts
-  max_reconnect_attempts: 5
-
-  # Reconnection delay in seconds
-  reconnect_delay: 30
-
-# Development and debugging settings
-debug:
-  # Enable debug logging for this bot
-  enabled: false
-
-  # Log all Discord API calls
-  log_api_calls: false
-
-  # Log command executions
-  log_commands: true
-
-  # Log bot events
-  log_events: false
