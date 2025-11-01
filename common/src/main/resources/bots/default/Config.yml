@@ -1,82 +1,52 @@
-config: # Please do not touch this section
+config:
+  # Config version
   version: 1
+
+  # Config type
   type: discord-config-bot
 
 bot:
   # Bot token from Discord Developer Portal
-  # IMPORTANT: Replace with your actual bot token from https://discord.com/developers/applications
   token: "your-bot-token"
 
-  # Bot Activity Configuration
+  # Activity settings
+  # Text shown in Discord
   activity:
-    # Activity text displayed in Discord (e.g., "Playing Discord Engine")
-    # Keep it short and descriptive
     text: "Discord Engine"
-    
-    # Activity type - determines the prefix shown in Discord:
-    # - PLAYING: "Playing <text>"
-    # - LISTENING: "Listening to <text>"  
-    # - WATCHING: "Watching <text>"
-    # - STREAMING: "Streaming <text>" (requires url)
-    # - COMPETING: "Competing in <text>"
+
+    # Type of activity: PLAYING, LISTENING, WATCHING, STREAMING, COMPETING
     type: "PLAYING"
-    
-    # URL for streaming activity (only used when type is STREAMING)
-    # Must be a valid Twitch or YouTube URL
+
+    # URL for streaming (only used if type=STREAMING)
     url: ""
 
-  # ============================================================================
-  # Resource Sources Configuration
-  # ============================================================================
-  # Configure where this bot loads its resources (commands, avatars, languages)
-  # ============================================================================
+  # Resource sources
   sources:
+    # Commands settings
+    # Load mode: local, global, both
     commands:
-      # Resource loading mode:
-      # - "local": Load only from this bot's command folder
-      # - "global": Load only from the global commands folder  
-      # - "both": Load from both local and global (local takes priority)
       mode: "both"
-      
-      # Local command files (relative to bots/<bot-name>/discord/command/)
-      # List all command files this bot should load from its local folder
+
+      # Local command files
       local:
         - "commands.yml"
-        # - "custom-commands.yml"  # Uncomment to add more command files
-        # - "admin-commands.yml"   # Example: admin-specific commands
-      
-      # Global command files (relative to discord/global/command/)
-      # List all command files this bot should load from the global folder
-      # These are shared across all bots that use global or both mode
+
+      # Global command files
       global:
         - "commands.yml"
-        # - "my-commands/commands.yml"  # Example: commands in subdirectory
-        # - "shared-utilities.yml"      # Example: shared utility commands
 
+    # Avatar settings
+    # Load mode: local or global
     avatar:
-      # Resource loading mode:
-      # - "local": Load from this bot's avatar folder
-      # - "global": Load from the global avatar folder
       mode: "local"
-      
-      # Avatar file name (without path)
-      # File should exist in the appropriate folder based on mode:
-      # - local mode: bots/<bot-name>/discord/avatar/<file>
-      # - global mode: discord/global/avatar/<file>
+
+      # Avatar file name
       file: "avatar-discordengine-nofon.png"
 
-    # ============================================================================
-    # Language/Localization Configuration  
-    # ============================================================================
+    # Language settings
+    # Load mode: local or global
     lang:
-      # Resource loading mode:
-      # - "local": Load from this bot's lang folder
-      # - "global": Load from the global lang folder
       mode: "local"
-      
-      # Language file name (without path)
-      # File should exist in the appropriate folder based on mode:
-      # - local mode: bots/<bot-name>/discord/lang/<file>
-      # - global mode: discord/global/lang/<file>
-      # Available languages: en_US.yml, ru_RU.yml, uk_UA.yml
+
+      # Language file name
       file: "en_US.yml"
