@@ -136,4 +136,104 @@ public class DiscordBotServiceImpl implements DiscordBotService {
     public String getBotName() {
         return botName;
     }
+
+    @Override
+    public void sendEmbedToChannel(String channelId, Object embed) {
+        if (jda != null && jda.getStatus() == JDA.Status.CONNECTED && embed instanceof net.dv8tion.jda.api.entities.MessageEmbed) {
+            jda.getTextChannelById(channelId).sendMessageEmbeds((net.dv8tion.jda.api.entities.MessageEmbed) embed).queue();
+        }
+    }
+
+    @Override
+    public void updateActivity(String type, String text) {
+        if (jda != null && jda.getStatus() == JDA.Status.CONNECTED) {
+            Activity activity;
+            switch (type.toUpperCase()) {
+                case "PLAYING":
+                    activity = Activity.playing(text);
+                    break;
+                case "WATCHING":
+                    activity = Activity.watching(text);
+                    break;
+                case "LISTENING":
+                    activity = Activity.listening(text);
+                    break;
+                case "COMPETING":
+                    activity = Activity.competing(text);
+                    break;
+                case "STREAMING":
+                    activity = Activity.streaming(text, "https://twitch.tv/");
+                    break;
+                default:
+                    activity = Activity.playing(text);
+            }
+            jda.getPresence().setActivity(activity);
+        }
+    }
+
+    @Override
+    public void updateStatus(String status) {
+        if (jda != null && jda.getStatus() == JDA.Status.CONNECTED) {
+            net.dv8tion.jda.api.OnlineStatus onlineStatus;
+            switch (status.toUpperCase()) {
+                case "ONLINE":
+                    onlineStatus = net.dv8tion.jda.api.OnlineStatus.ONLINE;
+                    break;
+                case "IDLE":
+                    onlineStatus = net.dv8tion.jda.api.OnlineStatus.IDLE;
+                    break;
+                case "DND":
+                case "DO_NOT_DISTURB":
+                    onlineStatus = net.dv8tion.jda.api.OnlineStatus.DO_NOT_DISTURB;
+                    break;
+                case "INVISIBLE":
+                    onlineStatus = net.dv8tion.jda.api.OnlineStatus.INVISIBLE;
+                    break;
+                default:
+                    onlineStatus = net.dv8tion.jda.api.OnlineStatus.ONLINE;
+            }
+            jda.getPresence().setStatus(onlineStatus);
+        }
+    }
+
+    @Override
+    public Object getJDA() {
+        return jda;
+    }
+
+    @Override
+    public java.util.List<?> getGuilds() {
+        return jda != null ? jda.getGuilds() : java.util.Collections.emptyList();
+    }
+
+    @Override
+    public Object getGuildById(String guildId) {
+        return jda != null ? jda.getGuildById(guildId) : null;
+    }
+
+    @Override
+    public Object getChannelById(String channelId) {
+        return jda != null ? jda.getTextChannelById(channelId) : null;
+    }
+
+    @Override
+    public void createSlashCommand(String name, String description) {
+        if (jda != null && jda.getStatus() == JDA.Status.CONNECTED) {
+            jda.upsertCommand(name, description).queue();
+        }
+    }
+
+    @Override
+    public void deleteSlashCommand(String commandId) {
+        if (jda != null && jda.getStatus() == JDA.Status.CONNECTED) {
+            jda.deleteCommandById(commandId).queue();
+        }
+    }
+
+    @Override
+    public void updateSlashCommands() {
+        if (jda != null && jda.getStatus() == JDA.Status.CONNECTED) {
+            jda.updateCommands().queue();
+        }
+    }
 }

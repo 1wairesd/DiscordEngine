@@ -1,0 +1,444 @@
+# Example Discord Commands Configuration
+# This file demonstrates all available command actions
+
+commands:
+  # Simple message command
+  hello:
+    description: "Say hello to the user"
+    trigger: "hello"
+    actions:
+      - send_message:
+          content: "Hello! Welcome to our Discord server!"
+
+  # Ephemeral message (only visible to command user)
+  secret:
+    description: "Send a secret message"
+    trigger: "secret"
+    actions:
+      - ephemeral_message:
+          content: "This message is only visible to you!"
+
+  # Rich embed message
+  info:
+    description: "Display server information"
+    trigger: "info"
+    actions:
+      - embed:
+          title: "Server Information"
+          description: "Welcome to our amazing Discord server!"
+          color: "#00FF00"
+          thumbnail: "https://example.com/logo.png"
+          image: "https://example.com/banner.png"
+          footer: "Powered by DiscordEngine"
+          author: "Server Bot"
+          fields:
+            - name: "Members"
+              value: "1000+"
+              inline: true
+            - name: "Channels"
+              value: "50+"
+              inline: true
+            - name: "Active Since"
+              value: "2024"
+              inline: true
+
+  # Role management
+  give_member_role:
+    description: "Give member role to a user"
+    trigger: "give-role"
+    actions:
+      - add_role:
+          role_id: "123456789012345678"
+          target_option: "user"
+      - send_message:
+          content: "Role assigned successfully!"
+
+  remove_member_role:
+    description: "Remove member role from a user"
+    trigger: "remove-role"
+    actions:
+      - remove_role:
+          role_id: "123456789012345678"
+          target_option: "user"
+      - send_message:
+          content: "Role removed successfully!"
+
+  # Reaction
+  react:
+    description: "React to the command"
+    trigger: "react"
+    actions:
+      - send_message:
+          content: "Check out this reaction!"
+      - reaction:
+          emoji: "👍"
+
+  # Private message
+  dm_me:
+    description: "Send a private message"
+    trigger: "dm"
+    actions:
+      - private_message:
+          content: "This is a private message just for you!"
+      - ephemeral_message:
+          content: "Check your DMs!"
+
+  # Moderation: Kick
+  kick_user:
+    description: "Kick a user from the server"
+    trigger: "kick"
+    actions:
+      - kick:
+          target_option: "user"
+          reason: "Violated server rules"
+
+  # Moderation: Ban
+  ban_user:
+    description: "Ban a user from the server"
+    trigger: "ban"
+    actions:
+      - ban:
+          target_option: "user"
+          reason: "Severe rule violation"
+          delete_message_days: 7
+
+  # Moderation: Timeout
+  timeout_user:
+    description: "Timeout a user"
+    trigger: "timeout"
+    actions:
+      - timeout:
+          target_option: "user"
+          duration_minutes: 10
+          reason: "Spamming"
+      - send_message:
+          content: "User has been timed out for 10 minutes"
+
+  # Channel operations
+  announce:
+    description: "Send announcement to specific channel"
+    trigger: "announce"
+    actions:
+      - channel_message:
+          channel_id: "123456789012345678"
+          content: "📢 Important announcement!"
+      - ephemeral_message:
+          content: "Announcement sent!"
+
+  create_text_channel:
+    description: "Create a new text channel"
+    trigger: "create-text"
+    actions:
+      - create_channel:
+          name: "new-text-channel"
+          type: "TEXT"
+
+  create_voice_channel:
+    description: "Create a new voice channel"
+    trigger: "create-voice"
+    actions:
+      - create_channel:
+          name: "New Voice Channel"
+          type: "VOICE"
+
+  # Role creation
+  create_new_role:
+    description: "Create a new role"
+    trigger: "create-role"
+    actions:
+      - create_role:
+          name: "New Role"
+          color: "#FF5733"
+          hoisted: true
+          mentionable: true
+      - send_message:
+          content: "New role created!"
+
+  # Voice operations
+  move_user:
+    description: "Move user to another voice channel"
+    trigger: "move"
+    actions:
+      - move_to_voice:
+          target_option: "user"
+          voice_channel_id: "123456789012345678"
+
+  mute_user:
+    description: "Mute a user in voice"
+    trigger: "mute"
+    actions:
+      - mute:
+          target_option: "user"
+          mute: true
+      - send_message:
+          content: "User muted"
+
+  unmute_user:
+    description: "Unmute a user in voice"
+    trigger: "unmute"
+    actions:
+      - mute:
+          target_option: "user"
+          mute: false
+      - send_message:
+          content: "User unmuted"
+
+  deafen_user:
+    description: "Deafen a user in voice"
+    trigger: "deafen"
+    actions:
+      - deafen:
+          target_option: "user"
+          deafen: true
+
+  # Nickname management
+  set_nickname:
+    description: "Set user nickname"
+    trigger: "nick"
+    actions:
+      - nickname:
+          target_option: "user"
+          nickname: "NewNickname"
+      - send_message:
+          content: "Nickname updated!"
+
+  # Message operations
+  pin_this:
+    description: "Pin the command response"
+    trigger: "pin"
+    actions:
+      - send_message:
+          content: "This message will be pinned!"
+      - pin_message:
+          pin: true
+
+  # Thread creation
+  create_discussion:
+    description: "Create a discussion thread"
+    trigger: "discuss"
+    actions:
+      - send_message:
+          content: "Starting a new discussion!"
+      - create_thread:
+          name: "Discussion Thread"
+          private: false
+
+  # Complex multi-action command
+  welcome:
+    description: "Welcome a new member"
+    trigger: "welcome"
+    actions:
+      - embed:
+          title: "Welcome to the Server!"
+          description: "We're glad to have you here!"
+          color: "#7289DA"
+          thumbnail: "https://example.com/welcome.png"
+          fields:
+            - name: "📜 Rules"
+              value: "Please read #rules"
+              inline: true
+            - name: "💬 Chat"
+              value: "Join #general"
+              inline: true
+            - name: "🎮 Gaming"
+              value: "Check #gaming"
+              inline: true
+      - add_role:
+          role_id: "123456789012345678"
+          target_option: "user"
+      - reaction:
+          emoji: "👋"
+      - private_message:
+          content: "Welcome! If you need help, feel free to ask!"
+
+  # Message management
+  clear_messages:
+    description: "Clear messages from channel"
+    trigger: "clear"
+    actions:
+      - delete_messages:
+          amount: 50
+      - ephemeral_message:
+          content: "Messages cleared!"
+
+  # Channel moderation
+  set_slowmode:
+    description: "Set channel slowmode"
+    trigger: "slowmode"
+    actions:
+      - slowmode:
+          seconds: 10
+      - send_message:
+          content: "Slowmode set to 10 seconds"
+
+  lock_this_channel:
+    description: "Lock the channel"
+    trigger: "lock"
+    actions:
+      - lock_channel:
+          lock: true
+      - send_message:
+          content: "🔒 Channel locked!"
+
+  unlock_this_channel:
+    description: "Unlock the channel"
+    trigger: "unlock"
+    actions:
+      - lock_channel:
+          lock: false
+      - send_message:
+          content: "🔓 Channel unlocked!"
+
+  # Interactive buttons
+  poll:
+    description: "Create a poll with buttons"
+    trigger: "poll"
+    actions:
+      - buttons:
+          message: "📊 What's your favorite color?"
+          buttons:
+            - label: "Red"
+              id: "poll_red"
+              style: "DANGER"
+              emoji: "🔴"
+            - label: "Blue"
+              id: "poll_blue"
+              style: "PRIMARY"
+              emoji: "🔵"
+            - label: "Green"
+              id: "poll_green"
+              style: "SUCCESS"
+              emoji: "🟢"
+            - label: "Yellow"
+              id: "poll_yellow"
+              style: "SECONDARY"
+              emoji: "🟡"
+
+  links:
+    description: "Show useful links"
+    trigger: "links"
+    actions:
+      - buttons:
+          message: "📚 Useful Resources"
+          buttons:
+            - label: "Website"
+              url: "https://example.com"
+              emoji: "🌐"
+            - label: "Documentation"
+              url: "https://docs.example.com"
+              emoji: "📖"
+            - label: "Support"
+              url: "https://support.example.com"
+              emoji: "💬"
+
+  # Select menu
+  choose_role:
+    description: "Choose your role"
+    trigger: "choose-role"
+    actions:
+      - select_menu:
+          message: "Select your preferred role:"
+          id: "role_selector"
+          placeholder: "Choose a role..."
+          options:
+            - label: "Developer"
+              value: "dev"
+              description: "For developers and programmers"
+              emoji: "💻"
+            - label: "Designer"
+              value: "design"
+              description: "For designers and artists"
+              emoji: "🎨"
+            - label: "Manager"
+              value: "manager"
+              description: "For project managers"
+              emoji: "📊"
+            - label: "Tester"
+              value: "tester"
+              description: "For QA and testers"
+              emoji: "🧪"
+
+  # Modal form
+  feedback:
+    description: "Submit feedback"
+    trigger: "feedback"
+    actions:
+      - modal:
+          id: "feedback_modal"
+          title: "Feedback Form"
+          inputs:
+            - id: "feedback_title"
+              label: "Title"
+              style: "SHORT"
+              placeholder: "Brief title for your feedback"
+              required: true
+            - id: "feedback_description"
+              label: "Description"
+              style: "PARAGRAPH"
+              placeholder: "Detailed description of your feedback"
+              required: true
+            - id: "feedback_email"
+              label: "Email (optional)"
+              style: "SHORT"
+              placeholder: "your@email.com"
+              required: false
+
+  report_bug:
+    description: "Report a bug"
+    trigger: "report"
+    actions:
+      - modal:
+          id: "bug_report_modal"
+          title: "Bug Report"
+          inputs:
+            - id: "bug_summary"
+              label: "Bug Summary"
+              style: "SHORT"
+              placeholder: "Short description of the bug"
+              required: true
+            - id: "bug_steps"
+              label: "Steps to Reproduce"
+              style: "PARAGRAPH"
+              placeholder: "1. Go to...\n2. Click on...\n3. See error"
+              required: true
+            - id: "bug_expected"
+              label: "Expected Behavior"
+              style: "PARAGRAPH"
+              placeholder: "What should happen?"
+              required: false
+
+  # Complex multi-action command with everything
+  super_command:
+    description: "Demonstration of all features"
+    trigger: "super"
+    actions:
+      - embed:
+          title: "🎉 Super Command Activated!"
+          description: "This command demonstrates multiple actions"
+          color: "#FF00FF"
+          fields:
+            - name: "Feature 1"
+              value: "Embeds"
+              inline: true
+            - name: "Feature 2"
+              value: "Buttons"
+              inline: true
+            - name: "Feature 3"
+              value: "Reactions"
+              inline: true
+      - reaction:
+          emoji: "⭐"
+      - buttons:
+          message: "Choose your next action:"
+          buttons:
+            - label: "Get Help"
+              id: "help_button"
+              style: "PRIMARY"
+              emoji: "❓"
+            - label: "Report Issue"
+              id: "report_button"
+              style: "DANGER"
+              emoji: "🐛"
+            - label: "View Docs"
+              url: "https://docs.example.com"
+              emoji: "📚"

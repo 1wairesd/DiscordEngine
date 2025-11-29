@@ -3,7 +3,6 @@ package com.wairesdindustries.discordengine.common.discord.bot;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordAvatar;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotService;
 import com.wairesdindustries.discordengine.common.DiscordEngine;
-import com.wairesdindustries.discordengine.api.data.config.ConfigData;
 import com.wairesdindustries.discordengine.common.discord.config.DiscordAvatarLoader;
 
 import java.io.File;
@@ -23,16 +22,21 @@ public class DiscordAvatarImpl implements DiscordAvatar {
     public CompletableFuture<Void> updateAvatar() {
         CompletableFuture<Void> cf = new CompletableFuture<>();
         try {
-            ConfigData.Bot botConfig = api.getConfigManager()
-                    .getConfig("Config.yml")
-                    .node("bot")
-                    .get(ConfigData.Bot.class);
-
-            String avatarFile = botConfig != null ? botConfig.avatar() : null;
-            File avatar = new DiscordAvatarLoader(api).getAvatarFile(avatarFile);
-
-            if (avatar.exists()) {
-                botService.updateAvatar(avatar.getAbsolutePath());
+            var config = api.getConfigManager().getConfig("Config.yml");
+            if (config != null) {
+                String avatarFile = config.node("bot", "sources", "avatar", "file").getString("avatar-discordengine-nofon.png");
+                String avatarMode = config.node("bot", "sources", "avatar", "mode").getString("local");
+                
+                File avatar = new DiscordAvatarLoader(api).getAvatarFile(avatarFile, avatarMode);
+                
+                if (avatar.exists()) {
+                    botService.updateAvatar(avatar.getAbsolutePath());
+                }
+            } else {
+                File avatar = new DiscordAvatarLoader(api).getAvatarFile("avatar-discordengine-nofon.png", "global");
+                if (avatar.exists()) {
+                    botService.updateAvatar(avatar.getAbsolutePath());
+                }
             }
             cf.complete(null);
         } catch (Exception e) {

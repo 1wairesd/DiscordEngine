@@ -7,7 +7,7 @@ config-reloaded: '&aConfig reloaded!'
 no-permission: '&cYou do not have permissions!'
 help:
   - '&9/%cmd% help &3- &2Help for the plugin'
-  - '&9/%cmd% reload &3- &2Reload config'
+  - '&9/%cmd% reload bot <name> [type] &3- &2Reload config'
   - '&9/%cmd% discord command delete &3- &2Unlink Discord command'
 
 confirmation-invalid-input: "&cInvalid input. Please enter &aY &cor &cN"
