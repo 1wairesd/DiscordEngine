@@ -16,13 +16,13 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-public class DEConfirmationManagerImpl implements DEConfirmationManager {
+public class ConfirmationManagerImpl implements DEConfirmationManager {
 
     private final DEAPI api;
     private final Map<UUID, Confirmation> confirmations = new ConcurrentHashMap<>();
     private Confirmation consoleConfirmation;
 
-    public DEConfirmationManagerImpl(DEAPI api) {
+    public ConfirmationManagerImpl(DEAPI api) {
         this.api = api;
     }
 

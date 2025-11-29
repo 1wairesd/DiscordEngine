@@ -12,7 +12,7 @@ import com.wairesdindustries.discordengine.api.manager.ConfigManager;
 import com.wairesdindustries.discordengine.api.manager.SubCommandManager;
 import com.wairesdindustries.discordengine.api.platform.DEConfirmationManager;
 import com.wairesdindustries.discordengine.common.config.ConfigManagerImpl;
-import com.wairesdindustries.discordengine.common.confirmation.DEConfirmationManagerImpl;
+import com.wairesdindustries.discordengine.common.confirmation.ConfirmationManagerImpl;
 import com.wairesdindustries.discordengine.common.discord.bot.DiscordAvatarImpl;
 import com.wairesdindustries.discordengine.common.discord.bot.DiscordBotManagerImpl;
 import com.wairesdindustries.discordengine.common.discord.bot.DiscordBotServiceImpl;
@@ -33,7 +33,7 @@ public final class DiscordEngine extends DEAPI {
     private final DiscordCommandManagerImpl commandManager;
     private final EventBusImpl eventBus;
     private final EventListener eventListener;
-    private final DEConfirmationManagerImpl confirmationManager;
+    private final ConfirmationManagerImpl confirmationManager;
     private final DiscordBotService botService;
     private final DiscordBotManager botManager;
     private final DiscordMessaging messagingService;
@@ -52,7 +52,7 @@ public final class DiscordEngine extends DEAPI {
         this.commandManager = new DiscordCommandManagerImpl(this);
         this.eventBus = new EventBusImpl(platform.getLogger());
         this.eventListener = new EventListener(this);
-        this.confirmationManager = new DEConfirmationManagerImpl(this);
+        this.confirmationManager = new ConfirmationManagerImpl(this);
 
         DEAPI.instance = this;
     }
