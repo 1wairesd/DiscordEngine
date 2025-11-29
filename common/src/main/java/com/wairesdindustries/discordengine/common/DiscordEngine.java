@@ -1,7 +1,9 @@
 package com.wairesdindustries.discordengine.common;
 
+import org.jetbrains.annotations.NotNull;
 import com.wairesdindustries.discordengine.api.DEAPI;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordAvatar;
+import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotManager;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotService;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordMessaging;
 import com.wairesdindustries.discordengine.api.discord.command.DiscordCommandManager;
@@ -12,6 +14,7 @@ import com.wairesdindustries.discordengine.api.platform.DEConfirmationManager;
 import com.wairesdindustries.discordengine.common.config.ConfigManagerImpl;
 import com.wairesdindustries.discordengine.common.confirmation.DEConfirmationManagerImpl;
 import com.wairesdindustries.discordengine.common.discord.bot.DiscordAvatarImpl;
+import com.wairesdindustries.discordengine.common.discord.bot.DiscordBotManagerImpl;
 import com.wairesdindustries.discordengine.common.discord.bot.DiscordBotServiceImpl;
 import com.wairesdindustries.discordengine.common.discord.bot.DiscordMessagingImpl;
 import com.wairesdindustries.discordengine.common.discord.command.DiscordCommandManagerImpl;
@@ -20,7 +23,6 @@ import com.wairesdindustries.discordengine.common.event.EventBusImpl;
 import com.wairesdindustries.discordengine.common.event.EventListener;
 import com.wairesdindustries.discordengine.common.manager.SubCommandManagerImpl;
 import com.wairesdindustries.discordengine.common.platform.BackendPlatform;
-import org.jetbrains.annotations.NotNull;
 
 public final class DiscordEngine extends DEAPI {
 
@@ -33,6 +35,7 @@ public final class DiscordEngine extends DEAPI {
     private final EventListener eventListener;
     private final DEConfirmationManagerImpl confirmationManager;
     private final DiscordBotService botService;
+    private final DiscordBotManager botManager;
     private final DiscordMessaging messagingService;
     private final DiscordAvatar avatarService;
 
@@ -43,6 +46,7 @@ public final class DiscordEngine extends DEAPI {
         this.subCommandManager = new SubCommandManagerImpl(this);
         this.commandLoader = new DiscordCommandLoader(this);
         this.botService = new DiscordBotServiceImpl(this);
+        this.botManager = new DiscordBotManagerImpl(this);
         this.messagingService = new DiscordMessagingImpl(this.botService);
         this.avatarService = new DiscordAvatarImpl(this.botService, this);
         this.commandManager = new DiscordCommandManagerImpl(this);
@@ -57,13 +61,14 @@ public final class DiscordEngine extends DEAPI {
         long time = System.currentTimeMillis();
         configManager.load();
         commandLoader.load();
-        botService.connect().join();
+        botManager.loadBots();
+        botManager.connectAll();
         eventBus.register(eventListener);
         platform.getLogger().info("Enabled in " + (System.currentTimeMillis() - time) + "ms");
     }
 
     public void unload() {
-        botService.close();
+        botManager.closeAll();
         eventBus.unregister(eventListener);
     }
 
@@ -115,6 +120,11 @@ public final class DiscordEngine extends DEAPI {
     @Override
     public @NotNull DiscordAvatar getDiscordAvatarService() {
         return avatarService;
+    }
+
+    @Override
+    public @NotNull DiscordBotManager getDiscordBotManager() {
+        return botManager;
     }
 
 }

@@ -28,6 +28,11 @@ public class ConfigManagerImpl implements ConfigManager {
     private final Map<String, ConfigImpl> configurations = new HashMap<>();
     private static final String[] defaultFiles = {
             "Config.yml",
+            "Bots.yml"
+    };
+    
+    private static final String[] defaultDirectories = {
+            "discord"
     };
 
     @Getter
@@ -46,6 +51,7 @@ public class ConfigManagerImpl implements ConfigManager {
     public void load() {
         configurations.clear();
         createFiles();
+        createDirectories();
         loadConfigurations(platform.getDataFolder().listFiles(), false);
 
         try {
@@ -73,7 +79,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 String dirName = file.getName().toLowerCase();
                 File[] subFiles = file.listFiles();
 
-                if (deep || "commands".equals(dirName)) {
+                if (deep || "bots".equals(dirName) || "discord".equals(dirName) || "command".equals(dirName)) {
                     loadConfigurations(subFiles, true);
                 } else if ("lang".equals(dirName)) {
                     loadConfigurations(subFiles, false);
@@ -164,6 +170,44 @@ public class ConfigManagerImpl implements ConfigManager {
         for (String fileName : defaultFiles) {
             File file = new File(platform.getDataFolder(), fileName);
             if (!file.exists()) platform.saveResource(fileName, false);
+        }
+    }
+
+    private void createDirectories() {
+        for (String dirName : defaultDirectories) {
+            File dir = new File(platform.getDataFolder(), dirName);
+            if (!dir.exists()) {
+                dir.mkdirs();
+                copyDirectoryFromResources(dirName, dir);
+            }
+        }
+    }
+
+    private void copyDirectoryFromResources(String resourcePath, File targetDir) {
+        copyResourceFileIfExists("discord/global/command/commands.yml", new File(targetDir, "global/command/commands.yml"));
+        copyResourceFileIfExists("discord/global/command/my-commands/commands.yml", new File(targetDir, "global/command/my-commands/commands.yml"));
+        copyResourceFileIfExists("discord/global/avatar/avatar-discordengine-nofon.png", new File(targetDir, "global/avatar/avatar-discordengine-nofon.png"));
+        copyResourceFileIfExists("discord/global/lang/en_US.yml", new File(targetDir, "global/lang/en_US.yml"));
+        copyResourceFileIfExists("discord/global/lang/ru_RU.yml", new File(targetDir, "global/lang/ru_RU.yml"));
+        copyResourceFileIfExists("discord/global/lang/uk_UA.yml", new File(targetDir, "global/lang/uk_UA.yml"));
+    }
+
+    private void copyResourceFileIfExists(String resourcePath, File targetFile) {
+        try {
+            if (!targetFile.exists()) {
+                targetFile.getParentFile().mkdirs();
+
+                try (java.io.InputStream is = platform.getResource(resourcePath)) {
+                    if (is != null) {
+                        java.nio.file.Files.copy(is, targetFile.toPath());
+                        platform.getLogger().info("Copied resource: " + resourcePath + " to " + targetFile.getPath());
+                    } else {
+                        platform.getLogger().warning("Resource not found: " + resourcePath);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            platform.getLogger().warning("Could not copy resource file: " + e.getMessage());
         }
     }
 

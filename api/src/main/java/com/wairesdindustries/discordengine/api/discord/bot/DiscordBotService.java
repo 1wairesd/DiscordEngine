@@ -15,4 +15,6 @@ public interface DiscordBotService {
     void updateActivity(String activity);
     
     void updateAvatar(String avatarPath);
+    
+    String getBotName();
 }

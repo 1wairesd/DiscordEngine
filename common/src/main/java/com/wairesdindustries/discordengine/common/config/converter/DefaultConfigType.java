@@ -40,7 +40,7 @@ public enum DefaultConfigType implements ConfigType {
 
     DISCORD_CONFIG_BOT (1, new HashMap<Integer, ConfigMigrator>() {{
         //  миграторы будут добавлены позже
-    }}),
+    }}, new ConfigSerializer(com.wairesdindustries.discordengine.api.data.config.BotConfigData.class, "bot")),
 
     UNKNOWN(true, new UnknownMigrator());
 

@@ -20,6 +20,10 @@ public class UnknownMigrator implements ConfigMigrator {
             type = DefaultConfigType.CONFIG;
         }
 
+        if (name.equals("bots.yml")) {
+            type = DefaultConfigType.DISCORD_BOTS;
+        }
+
         if (config.path().contains("/lang")) type = DefaultConfigType.LANG;
 
         if (type == DefaultConfigType.UNKNOWN) type = DefaultConfigType.UNKNOWN_CUSTOM;

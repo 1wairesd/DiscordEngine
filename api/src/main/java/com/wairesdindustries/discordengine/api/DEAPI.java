@@ -1,17 +1,20 @@
 package com.wairesdindustries.discordengine.api;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.wairesdindustries.discordengine.api.config.Loadable;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordAvatar;
+import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotManager;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotService;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordMessaging;
 import com.wairesdindustries.discordengine.api.discord.command.DiscordCommandManager;
 import com.wairesdindustries.discordengine.api.event.EventBus;
-import com.wairesdindustries.discordengine.api.manager.SubCommandManager;
 import com.wairesdindustries.discordengine.api.manager.ConfigManager;
+import com.wairesdindustries.discordengine.api.manager.SubCommandManager;
 import com.wairesdindustries.discordengine.api.platform.DEConfirmationManager;
 import com.wairesdindustries.discordengine.api.platform.Platform;
+
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class DEAPI {
 
@@ -31,6 +34,8 @@ public abstract class DEAPI {
     public abstract @NotNull DiscordCommandManager getDiscordCommandManager();
 
     public abstract @NotNull DiscordBotService getDiscordBotService();
+
+    public abstract @NotNull DiscordBotManager getDiscordBotManager();
 
     public abstract @NotNull EventBus getEventBus();
 

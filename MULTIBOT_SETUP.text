@@ -1,0 +1,135 @@
+# Многоботовая система Discord Engine
+
+## Быстрый старт
+
+### 1. Настройка токена бота
+
+Откройте файл конфигурации бота:
+```
+plugins/DiscordEngine/bots/default/discord/Config.yml
+```
+
+Замените `your-bot-token` на реальный токен вашего Discord бота:
+```yaml
+bot:
+  token: "ВАШ_ТОКЕН_ЗДЕСЬ"
+```
+
+### 2. Перезагрузка
+
+Выполните команду в игре или консоли:
+```
+/de reload
+```
+
+## Добавление нескольких ботов
+
+### 1. Откройте Bots.yml
+```
+plugins/DiscordEngine/Bots.yml
+```
+
+### 2. Добавьте новых ботов
+```yaml
+config:
+  version: 1
+  type: discord-bots
+
+bots:
+  - name: "default"
+    enabled: true
+  - name: "moderator"
+    enabled: true
+  - name: "announcer"
+    enabled: true
+```
+
+### 3. Перезапустите сервер
+
+После перезапуска автоматически создастся структура для каждого бота:
+```
+plugins/DiscordEngine/bots/
+├── default/
+│   └── discord/
+│       ├── Config.yml
+│       └── bot/
+│           ├── avatar/
+│           ├── command/
+│           └── lang/
+├── moderator/
+│   └── discord/
+│       ├── Config.yml
+│       └── bot/
+└── announcer/
+    └── discord/
+        ├── Config.yml
+        └── bot/
+```
+
+### 4. Настройте токены для каждого бота
+
+Для каждого бота укажите свой токен в соответствующем Config.yml
+
+## Команды перезагрузки
+
+- `/de reload` - перезагрузить все конфигурации
+- `/de reload bot <name> activity` - обновить активность бота
+- `/de reload bot <name> avatar` - обновить аватар бота
+- `/de reload bot <name> command` - обновить команды бота
+- `/de reload bot <name> lang` - обновить локализацию бота
+- `/de reload bot <name> restart` - полностью перезапустить бота
+
+## Структура конфигурации
+
+### Режимы загрузки ресурсов
+
+- `local` - загружать только из папки бота
+- `global` - загружать только из глобальной папки
+- `both` - загружать из обеих (сначала local, потом global)
+
+### Пример Config.yml
+
+```yaml
+bot:
+  token: "your-bot-token"
+  activity:
+    text: "Discord Engine"
+    type: "PLAYING"
+    url: ""
+
+sources:
+  commands:
+    mode: "both"
+    local:
+      - "commands.yml"
+    global:
+      - "commands.yml"
+  avatar:
+    mode: "local"
+    file: "avatar.png"
+  lang:
+    mode: "local"
+    file: "en_US.yml"
+```
+
+## Получение токена Discord бота
+
+1. Перейдите на https://discord.com/developers/applications
+2. Создайте новое приложение или выберите существующее
+3. Перейдите в раздел "Bot"
+4. Нажмите "Reset Token" и скопируйте токен
+5. Вставьте токен в Config.yml вашего бота
+
+## Устранение проблем
+
+### Бот не подключается
+
+Проверьте логи сервера на наличие сообщений:
+- `Bot 'name' has no valid token` - укажите правильный токен
+- `Failed to connect bot 'name'` - проверьте токен и интернет-соединение
+
+### Бот не отвечает на команды
+
+1. Убедитесь, что у бота есть необходимые права в Discord
+2. Проверьте, что команды правильно настроены в commands.yml
+3. Выполните `/de reload bot <name> command`

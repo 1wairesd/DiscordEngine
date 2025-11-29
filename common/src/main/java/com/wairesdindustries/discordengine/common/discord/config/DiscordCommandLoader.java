@@ -15,9 +15,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DiscordCommandLoader implements Loadable {
-    private static final String COMMANDS_FOLDER = "commands";
     private static final String DEFAULT_COMMAND_FILE = "commands.yml";
-    private static final List<String> DEFAULT_COMMANDS = List.of(COMMANDS_FOLDER + "/" + DEFAULT_COMMAND_FILE);
+    private static final List<String> DEFAULT_COMMANDS = List.of();
 
     private final DiscordEngine api;
 
@@ -27,9 +26,6 @@ public class DiscordCommandLoader implements Loadable {
 
     @Override
     public void load() {
-        File folder = new File(api.getPlatform().getDataFolder(), COMMANDS_FOLDER);
-        if (!folder.exists()) folder.mkdirs();
-
         List<Config> commandConfigs = api.getConfigManager().get().values().stream()
             .filter(config -> config.type() == DefaultConfigType.DISCORD_COMMAND_BOT)
             .collect(Collectors.toList());
@@ -75,8 +71,10 @@ public class DiscordCommandLoader implements Loadable {
         for (String resource : DEFAULT_COMMANDS) {
             File out = new File(api.getPlatform().getDataFolder(), resource);
             if (!out.exists()) {
-                out.getParentFile().mkdirs();
-                api.getPlatform().saveResource(resource, false);
+                if (api.getPlatform().getResource(resource) != null) {
+                    out.getParentFile().mkdirs();
+                    api.getPlatform().saveResource(resource, false);
+                }
             }
         }
     }
