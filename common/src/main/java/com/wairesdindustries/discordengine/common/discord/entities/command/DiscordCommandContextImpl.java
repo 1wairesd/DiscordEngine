@@ -12,35 +12,91 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class DiscordCommandContextImpl implements DiscordCommandContext {
 
     private final SlashCommandInteractionEvent slashEvent;
+    private final ButtonInteractionEvent buttonEvent;
+    private final ModalInteractionEvent modalEvent;
 
     public DiscordCommandContextImpl(SlashCommandInteractionEvent event) {
         this.slashEvent = event;
+        this.buttonEvent = null;
+        this.modalEvent = null;
+    }
+
+    public DiscordCommandContextImpl(ButtonInteractionEvent event) {
+        this.slashEvent = null;
+        this.buttonEvent = event;
+        this.modalEvent = null;
+    }
+
+    public DiscordCommandContextImpl(ModalInteractionEvent event) {
+        this.slashEvent = null;
+        this.buttonEvent = null;
+        this.modalEvent = event;
     }
 
     @Override
     public void reply(String message) {
         if (this.slashEvent != null) {
-            this.slashEvent.reply(message).queue();
+            if (!this.slashEvent.isAcknowledged()) {
+                this.slashEvent.reply(message).queue();
+            } else {
+                this.slashEvent.getHook().sendMessage(message).queue();
+            }
+        } else if (this.buttonEvent != null) {
+            if (!this.buttonEvent.isAcknowledged()) {
+                this.buttonEvent.reply(message).queue();
+            } else {
+                this.buttonEvent.getHook().sendMessage(message).queue();
+            }
+        } else if (this.modalEvent != null) {
+            if (!this.modalEvent.isAcknowledged()) {
+                this.modalEvent.reply(message).queue();
+            } else {
+                this.modalEvent.getHook().sendMessage(message).queue();
+            }
         }
     }
 
     @Override
     public void replyEphemeral(String message) {
         if (this.slashEvent != null) {
-            this.slashEvent.reply(message).setEphemeral(true).queue();
+            if (!this.slashEvent.isAcknowledged()) {
+                this.slashEvent.reply(message).setEphemeral(true).queue();
+            } else {
+                this.slashEvent.getHook().sendMessage(message).setEphemeral(true).queue();
+            }
+        } else if (this.buttonEvent != null) {
+            if (!this.buttonEvent.isAcknowledged()) {
+                this.buttonEvent.reply(message).setEphemeral(true).queue();
+            } else {
+                this.buttonEvent.getHook().sendMessage(message).setEphemeral(true).queue();
+            }
+        } else if (this.modalEvent != null) {
+            if (!this.modalEvent.isAcknowledged()) {
+                this.modalEvent.reply(message).setEphemeral(true).queue();
+            } else {
+                this.modalEvent.getHook().sendMessage(message).setEphemeral(true).queue();
+            }
         }
     }
 
     @Override
     public void replyEmbed(Object embed) {
-        if (this.slashEvent != null && embed instanceof MessageEmbed) {
-            this.slashEvent.replyEmbeds((MessageEmbed) embed).queue();
+        if (embed instanceof MessageEmbed) {
+            if (this.slashEvent != null) {
+                this.slashEvent.replyEmbeds((MessageEmbed) embed).queue();
+            } else if (this.buttonEvent != null) {
+                this.buttonEvent.replyEmbeds((MessageEmbed) embed).queue();
+            } else if (this.modalEvent != null) {
+                this.modalEvent.replyEmbeds((MessageEmbed) embed).queue();
+            }
         }
     }
 
@@ -48,6 +104,10 @@ public class DiscordCommandContextImpl implements DiscordCommandContext {
     public void deferReply() {
         if (this.slashEvent != null) {
             this.slashEvent.deferReply().queue();
+        } else if (this.buttonEvent != null) {
+            this.buttonEvent.deferReply().queue();
+        } else if (this.modalEvent != null) {
+            this.modalEvent.deferReply().queue();
         }
     }
 
@@ -55,43 +115,71 @@ public class DiscordCommandContextImpl implements DiscordCommandContext {
     public void deferReplyEphemeral() {
         if (this.slashEvent != null) {
             this.slashEvent.deferReply(true).queue();
+        } else if (this.buttonEvent != null) {
+            this.buttonEvent.deferReply(true).queue();
+        } else if (this.modalEvent != null) {
+            this.modalEvent.deferReply(true).queue();
         }
     }
 
     @Override
     public Object getUser() {
-        return slashEvent != null ? slashEvent.getUser() : null;
+        if (slashEvent != null) return slashEvent.getUser();
+        if (buttonEvent != null) return buttonEvent.getUser();
+        if (modalEvent != null) return modalEvent.getUser();
+        return null;
     }
 
     @Override
     public Object getMember() {
-        return slashEvent != null ? slashEvent.getMember() : null;
+        if (slashEvent != null) return slashEvent.getMember();
+        if (buttonEvent != null) return buttonEvent.getMember();
+        if (modalEvent != null) return modalEvent.getMember();
+        return null;
     }
 
     @Override
     public Object getGuild() {
-        return slashEvent != null ? slashEvent.getGuild() : null;
+        if (slashEvent != null) return slashEvent.getGuild();
+        if (buttonEvent != null) return buttonEvent.getGuild();
+        if (modalEvent != null) return modalEvent.getGuild();
+        return null;
     }
 
     @Override
     public Object getChannel() {
-        return slashEvent != null ? slashEvent.getChannel() : null;
+        if (slashEvent != null) return slashEvent.getChannel();
+        if (buttonEvent != null) return buttonEvent.getChannel();
+        if (modalEvent != null) return modalEvent.getChannel();
+        return null;
     }
     
     public User getUserTyped() {
-        return slashEvent != null ? slashEvent.getUser() : null;
+        if (slashEvent != null) return slashEvent.getUser();
+        if (buttonEvent != null) return buttonEvent.getUser();
+        if (modalEvent != null) return modalEvent.getUser();
+        return null;
     }
 
     public Member getMemberTyped() {
-        return slashEvent != null ? slashEvent.getMember() : null;
+        if (slashEvent != null) return slashEvent.getMember();
+        if (buttonEvent != null) return buttonEvent.getMember();
+        if (modalEvent != null) return modalEvent.getMember();
+        return null;
     }
 
     public Guild getGuildTyped() {
-        return slashEvent != null ? slashEvent.getGuild() : null;
+        if (slashEvent != null) return slashEvent.getGuild();
+        if (buttonEvent != null) return buttonEvent.getGuild();
+        if (modalEvent != null) return modalEvent.getGuild();
+        return null;
     }
 
     public MessageChannel getChannelTyped() {
-        return slashEvent != null ? slashEvent.getChannel() : null;
+        if (slashEvent != null) return slashEvent.getChannel();
+        if (buttonEvent != null) return buttonEvent.getChannel();
+        if (modalEvent != null) return modalEvent.getChannel();
+        return null;
     }
 
     @Override
@@ -198,10 +286,11 @@ public class DiscordCommandContextImpl implements DiscordCommandContext {
 
     @Override
     public boolean hasPermission(String permission) {
-        if (slashEvent == null || slashEvent.getMember() == null) return false;
+        Member member = getMemberTyped();
+        if (member == null) return false;
         try {
             Permission perm = Permission.valueOf(permission);
-            return slashEvent.getMember().hasPermission(perm);
+            return member.hasPermission(perm);
         } catch (IllegalArgumentException e) {
             return false;
         }
@@ -209,5 +298,13 @@ public class DiscordCommandContextImpl implements DiscordCommandContext {
 
     public SlashCommandInteractionEvent getSlashEvent() {
         return slashEvent;
+    }
+
+    public ButtonInteractionEvent getButtonEvent() {
+        return buttonEvent;
+    }
+
+    public ModalInteractionEvent getModalEvent() {
+        return modalEvent;
     }
 }

@@ -43,4 +43,8 @@ public abstract class DEAPI {
 
     public abstract @NotNull DiscordMessaging getDiscordMessagingService();
 
+    public abstract @NotNull com.wairesdindustries.discordengine.api.discord.component.ComponentLoader getComponentLoader();
+    
+    public abstract @NotNull Object getComponentInteractionHandler();
+
 }

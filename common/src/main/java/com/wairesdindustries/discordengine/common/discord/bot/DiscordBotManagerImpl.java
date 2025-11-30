@@ -50,113 +50,13 @@ public class DiscordBotManagerImpl implements DiscordBotManager {
     
     private void createBotStructure(String botName) {
         File botDir = new File(api.getPlatform().getDataFolder(), "bots/" + botName);
-        File discordDir = new File(botDir, "discord");
-        File botSubDir = new File(discordDir, "bot");
-
-        File avatarDir = new File(botSubDir, "avatar");
-        File commandDir = new File(botSubDir, "command");
-        File langDir = new File(botSubDir, "lang");
-        
-        avatarDir.mkdirs();
-        commandDir.mkdirs();
-        langDir.mkdirs();
-
-        File configFile = new File(discordDir, "Config.yml");
-        if (!configFile.exists()) {
-            String globalConfigResource = "bots/default/discord/Config.yml";
-            try (java.io.InputStream is = api.getPlatform().getResource(globalConfigResource)) {
-                if (is != null) {
-                    java.nio.file.Files.copy(is, configFile.toPath());
-                } else {
-                    java.nio.file.Files.writeString(configFile.toPath(), getDefaultConfig());
-                }
-            } catch (Exception e) {
-                api.getPlatform().getLogger().severe("Failed to create default config for bot: " + botName + " - " + e.getMessage());
-                try {
-                    java.nio.file.Files.writeString(configFile.toPath(), getDefaultConfig());
-                } catch (Exception fallbackException) {
-                    api.getPlatform().getLogger().severe("Failed to create fallback default config for bot: " + botName + " - " + fallbackException.getMessage());
-                }
+        if (!botDir.exists()) {
+            botDir.mkdirs();
+            // Delegate all file copying to ConfigManager
+            if (api.getConfigManager() instanceof com.wairesdindustries.discordengine.common.config.ConfigManagerImpl configManager) {
+                configManager.copyBotDefaultResources(botName);
             }
         }
-
-        copyDefaultResources(botName, avatarDir, commandDir, langDir);
-    }
-    
-    private void copyDefaultResources(String botName, File avatarDir, File commandDir, File langDir) {
-        String defaultAvatarResource = "bots/default/discord/bot/avatar/avatar-discordengine-nofon.png";
-        File avatarFile = new File(avatarDir, "avatar-discordengine-nofon.png");
-        if (!avatarFile.exists()) {
-            try {
-                try (java.io.InputStream is = api.getPlatform().getResource(defaultAvatarResource)) {
-                    if (is != null) {
-                        java.nio.file.Files.copy(is, avatarFile.toPath());
-                    }
-                }
-            } catch (Exception e) {
-                api.getPlatform().getLogger().warning("Could not copy default avatar for bot '" + botName + "': " + e.getMessage());
-            }
-        }
-
-        String defaultCommandResource = "bots/default/discord/bot/command/commands.yml";
-        File commandFile = new File(commandDir, "commands.yml");
-        if (!commandFile.exists()) {
-            try {
-                try (java.io.InputStream is = api.getPlatform().getResource(defaultCommandResource)) {
-                    if (is != null) {
-                        java.nio.file.Files.copy(is, commandFile.toPath());
-                    }
-                }
-            } catch (Exception e) {
-                api.getPlatform().getLogger().warning("Could not copy default commands for bot '" + botName + "': " + e.getMessage());
-            }
-        }
-
-        String[] langFiles = {"en_US.yml", "ru_RU.yml", "uk_UA.yml"};
-        for (String langFile : langFiles) {
-            String langResource = "bots/default/discord/bot/lang/" + langFile;
-            File targetLangFile = new File(langDir, langFile);
-            if (!targetLangFile.exists()) {
-                try {
-                    try (java.io.InputStream is = api.getPlatform().getResource(langResource)) {
-                        if (is != null) {
-                            java.nio.file.Files.copy(is, targetLangFile.toPath());
-                        }
-                    }
-                } catch (Exception e) {
-                    api.getPlatform().getLogger().warning("Could not copy language file " + langFile + " for bot '" + botName + "': " + e.getMessage());
-                }
-            }
-        }
-    }
-    
-    private String getDefaultConfig() {
-        return """
-config:
-  version: 1
-  type: discord-config-bot
-
-bot:
-  token: "your-bot-token"
-  activity:
-    text: "Discord Engine"
-    type: "PLAYING"
-    url: ""
-
-sources:
-  commands:
-    mode: "both"
-    local:
-      - "commands.yml"
-    global:
-      - "commands.yml"
-  avatar:
-    mode: "local"
-    file: "avatar.png"
-  lang:
-    mode: "local"
-    file: "en_US.yml"
-""";
     }
     
     @Override

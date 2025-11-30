@@ -42,9 +42,7 @@ public class DiscordAddRoleAction implements DiscordAction {
             return;
         }
 
-        guild.addRoleToMember(target, role).queue(
-                success -> context.reply("Role " + role.getName() + " added to " + target.getEffectiveName()),
-                error -> context.replyEphemeral("Failed to add role: " + error.getMessage())
-        );
+        // Silently add role without sending a message (other actions may have already replied)
+        guild.addRoleToMember(target, role).queue();
     }
 }

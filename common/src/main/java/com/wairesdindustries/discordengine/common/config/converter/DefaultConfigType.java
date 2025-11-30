@@ -34,6 +34,14 @@ public enum DefaultConfigType implements ConfigType {
         // миграторы будут добавлены позже
     }}),
 
+    DISCORD_MODAL_BOT(1, new HashMap<Integer, ConfigMigrator>() {{
+        // миграторы будут добавлены позже
+    }}),
+
+    DISCORD_BUTTON_BOT(1, new HashMap<Integer, ConfigMigrator>() {{
+        // миграторы будут добавлены позже
+    }}),
+
     DISCORD_LANG_BOT(1, new HashMap<Integer, ConfigMigrator>() {{
        //  миграторы будут добавлены позже
     }}),

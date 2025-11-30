@@ -1,6 +1,5 @@
 package com.wairesdindustries.discordengine.common.discord.config;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,57 +90,113 @@ public class DiscordCommandLoader implements Loadable {
         }
     }
 
-    private DiscordAction parseAction(ConfigurationNode actionNode) {
+    private String safeGetString(ConfigurationNode node, String defaultValue) {
+        try {
+            if (node == null || node.virtual()) {
+                return defaultValue;
+            }
+            Object raw = node.raw();
+            if (raw instanceof String) {
+                return (String) raw;
+            }
+            return defaultValue;
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
+    public DiscordAction parseAction(ConfigurationNode actionNode) {
+        if (actionNode == null || actionNode.virtual() || actionNode.childrenMap().isEmpty()) {
+            return null;
+        }
+        
         Object typeKey = actionNode.childrenMap().keySet().iterator().next();
         String type = typeKey.toString();
         ConfigurationNode params = actionNode.node(type);
 
         switch (type) {
+            case "component":
+            case "reference":
+                String reference = null;
+                
+                try {
+                    // Try to get reference from "reference" field
+                    ConfigurationNode refNode = params.node("reference");
+                    if (!refNode.virtual() && refNode.raw() != null) {
+                        Object rawValue = refNode.raw();
+                        if (rawValue instanceof String) {
+                            reference = (String) rawValue;
+                        }
+                    }
+                    
+                    // If not found, try to get as direct string value
+                    if (reference == null && !params.virtual() && params.raw() != null) {
+                        Object rawValue = params.raw();
+                        if (rawValue instanceof String) {
+                            reference = (String) rawValue;
+                        }
+                    }
+                } catch (Exception e) {
+                    api.getPlatform().getLogger().warning("Error parsing component reference: " + e.getMessage());
+                }
+                
+                if (reference != null && !reference.trim().isEmpty()) {
+                    return new com.wairesdindustries.discordengine.common.discord.entities.actions.DiscordComponentReferenceAction(api, reference);
+                }
+                
+                api.getPlatform().getLogger().warning("Component reference action has no reference specified");
+                return null;
+                
             case "send_message":
-                return new DiscordSendMessageAction(params.node("content").getString(""));
+                return new DiscordSendMessageAction(safeGetString(params.node("content"), ""));
                 
             case "ephemeral_message":
-                return new DiscordEphemeralMessageAction(params.node("content").getString(""));
+                return new DiscordEphemeralMessageAction(safeGetString(params.node("content"), ""));
                 
             case "embed":
                 return parseEmbedAction(params);
                 
             case "add_role":
+                String targetOption = safeGetString(params.node("target_option"), null);
                 return new DiscordAddRoleAction(
-                    params.node("role_id").getString(""),
-                    params.node("target_option").getString(null)
+                    safeGetString(params.node("role_id"), ""),
+                    targetOption != null ? targetOption : "user"
                 );
                 
             case "remove_role":
+                String removeTargetOption = safeGetString(params.node("target_option"), null);
                 return new DiscordRemoveRoleAction(
-                    params.node("role_id").getString(""),
-                    params.node("target_option").getString(null)
+                    safeGetString(params.node("role_id"), ""),
+                    removeTargetOption != null ? removeTargetOption : "user"
                 );
                 
             case "reaction":
-                return new DiscordReactionAction(params.node("emoji").getString(""));
+                return new DiscordReactionAction(safeGetString(params.node("emoji"), ""));
                 
             case "private_message":
                 return new DiscordPrivateMessageAction(params.node("content").getString(""));
                 
             case "kick":
+                String kickReason = params.node("reason").getString(null);
                 return new DiscordKickAction(
                     params.node("target_option").getString("user"),
-                    params.node("reason").getString(null)
+                    kickReason != null ? kickReason : "No reason provided"
                 );
                 
             case "ban":
+                String banReason = params.node("reason").getString(null);
                 return new DiscordBanAction(
                     params.node("target_option").getString("user"),
-                    params.node("reason").getString(null),
+                    banReason != null ? banReason : "No reason provided",
                     params.node("delete_message_days").getInt(0)
                 );
                 
             case "timeout":
+                String timeoutReason = params.node("reason").getString(null);
                 return new DiscordTimeoutAction(
                     params.node("target_option").getString("user"),
                     params.node("duration_minutes").getLong(5),
-                    params.node("reason").getString(null)
+                    timeoutReason != null ? timeoutReason : "No reason provided"
                 );
                 
             case "channel_message":
@@ -157,9 +212,10 @@ public class DiscordCommandLoader implements Loadable {
                 );
                 
             case "create_role":
+                String roleColor = params.node("color").getString(null);
                 return new DiscordCreateRoleAction(
                     params.node("name").getString("New Role"),
-                    params.node("color").getString(null),
+                    roleColor != null ? roleColor : "#FFFFFF",
                     params.node("hoisted").getBoolean(false),
                     params.node("mentionable").getBoolean(false)
                 );
@@ -183,9 +239,11 @@ public class DiscordCommandLoader implements Loadable {
                 );
 
             case "nickname":
+                String nicknameTarget = params.node("target_option").getString(null);
+                String nicknameValue = params.node("nickname").getString(null);
                 return new DiscordNicknameAction(
-                        params.node("target_option").getString(null),
-                        params.node("nickname").getString(null)
+                        nicknameTarget != null ? nicknameTarget : "user",
+                        nicknameValue != null ? nicknameValue : ""
                 );
 
             case "pin_message":

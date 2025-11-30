@@ -178,18 +178,89 @@ public class ConfigManagerImpl implements ConfigManager {
             File dir = new File(platform.getDataFolder(), dirName);
             if (!dir.exists()) {
                 dir.mkdirs();
-                copyDirectoryFromResources(dirName, dir);
             }
+            // Ensure all subdirectories exist
+            new File(platform.getDataFolder(), "discord/global/button").mkdirs();
+            new File(platform.getDataFolder(), "discord/global/modal").mkdirs();
+            new File(platform.getDataFolder(), "discord/global/command").mkdirs();
+            new File(platform.getDataFolder(), "discord/global/avatar").mkdirs();
+            new File(platform.getDataFolder(), "discord/global/lang").mkdirs();
+            copyDirectoryFromResources(dirName, dir);
         }
     }
 
     private void copyDirectoryFromResources(String resourcePath, File targetDir) {
+        // Global Commands
         copyResourceFileIfExists("discord/global/command/commands.yml", new File(targetDir, "global/command/commands.yml"));
-        copyResourceFileIfExists("discord/global/command/my-commands/commands.yml", new File(targetDir, "global/command/my-commands/commands.yml"));
+        
+        // Global Components - Buttons
+        copyResourceFileIfExists("discord/global/button/buttons.yml", new File(targetDir, "global/button/buttons.yml"));
+        
+        // Global Components - Modals
+        copyResourceFileIfExists("discord/global/modal/modals.yml", new File(targetDir, "global/modal/modals.yml"));
+        
+        // Global Avatar
         copyResourceFileIfExists("discord/global/avatar/avatar-discordengine-nofon.png", new File(targetDir, "global/avatar/avatar-discordengine-nofon.png"));
+        
+        // Global Languages
         copyResourceFileIfExists("discord/global/lang/en_US.yml", new File(targetDir, "global/lang/en_US.yml"));
         copyResourceFileIfExists("discord/global/lang/ru_RU.yml", new File(targetDir, "global/lang/ru_RU.yml"));
         copyResourceFileIfExists("discord/global/lang/uk_UA.yml", new File(targetDir, "global/lang/uk_UA.yml"));
+    }
+
+    public void copyBotDefaultResources(String botName) {
+        File botDir = new File(platform.getDataFolder(), "bots/" + botName);
+        File discordDir = new File(botDir, "discord");
+        File botSubDir = new File(discordDir, "bot");
+
+        new File(botSubDir, "avatar").mkdirs();
+        new File(botSubDir, "command").mkdirs();
+        new File(botSubDir, "lang").mkdirs();
+        new File(botSubDir, "button").mkdirs();
+        new File(botSubDir, "modal").mkdirs();
+
+        File configFile = new File(discordDir, "Config.yml");
+        if (!configFile.exists()) {
+            try (java.io.InputStream is = platform.getResource("bots/default/discord/Config.yml")) {
+                if (is != null) {
+                    java.nio.file.Files.copy(is, configFile.toPath());
+                    platform.getLogger().info("Copied bot config for: " + botName);
+                } else {
+                    java.nio.file.Files.writeString(configFile.toPath(), getDefaultBotConfig());
+                    platform.getLogger().info("Created default bot config for: " + botName);
+                }
+            } catch (Exception e) {
+                platform.getLogger().warning("Failed to copy bot config, creating default: " + e.getMessage());
+                try {
+                    java.nio.file.Files.writeString(configFile.toPath(), getDefaultBotConfig());
+                } catch (Exception fallbackException) {
+                    platform.getLogger().severe("Failed to create bot config: " + fallbackException.getMessage());
+                }
+            }
+        }
+
+        // Copy Avatar
+        copyResourceFileIfExists("bots/default/discord/bot/avatar/avatar-discordengine-nofon.png", 
+            new File(botSubDir, "avatar/avatar-discordengine-nofon.png"));
+
+        // Copy Commands
+        copyResourceFileIfExists("bots/default/discord/bot/command/commands.yml", 
+            new File(botSubDir, "command/commands.yml"));
+
+        // Copy Buttons
+        copyResourceFileIfExists("bots/default/discord/bot/button/buttons.yml", 
+            new File(botSubDir, "button/buttons.yml"));
+
+        // Copy Modals
+        copyResourceFileIfExists("bots/default/discord/bot/modal/modals.yml", 
+            new File(botSubDir, "modal/modals.yml"));
+
+        // Copy Languages
+        String[] langFiles = {"en_US.yml", "ru_RU.yml", "uk_UA.yml"};
+        for (String langFile : langFiles) {
+            copyResourceFileIfExists("bots/default/discord/bot/lang/" + langFile, 
+                new File(botSubDir, "lang/" + langFile));
+        }
     }
 
     private void copyResourceFileIfExists(String resourcePath, File targetFile) {
@@ -209,6 +280,35 @@ public class ConfigManagerImpl implements ConfigManager {
         } catch (Exception e) {
             platform.getLogger().warning("Could not copy resource file: " + e.getMessage());
         }
+    }
+
+    private String getDefaultBotConfig() {
+        return """
+config:
+  version: 1
+  type: discord-config-bot
+
+bot:
+  token: "your-bot-token"
+  activity:
+    text: "Discord Engine"
+    type: "PLAYING"
+    url: ""
+
+sources:
+  commands:
+    mode: "both"
+    local:
+      - "commands.yml"
+    global:
+      - "commands.yml"
+  avatar:
+    mode: "local"
+    file: "avatar.png"
+  lang:
+    mode: "local"
+    file: "en_US.yml"
+""";
     }
 
     @Override

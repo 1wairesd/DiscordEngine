@@ -3,10 +3,146 @@ config: # Please do not touch this section
   type: discord-command-bot
 
 commands:
-  hello-global:
-    trigger: "hello-global"
-    description: "Welcomes the user for global scope"
-    context: "server"
+  # Main menu command - shows all options
+  menu:
+    description: "Open the main menu"
+    trigger: "menu"
     actions:
-      -  send_message:
-           content: "👋 Hello!"
+      - embed:
+          title: "🏠 Welcome to the Server!"
+          description: "Use the buttons below to get started"
+          color: "#5865F2"
+          fields:
+            - name: "✅ Register"
+              value: "Complete your registration"
+              inline: true
+            - name: "🎫 Support"
+              value: "Get help from our team"
+              inline: true
+            - name: "💡 Suggest"
+              value: "Share your ideas"
+              inline: true
+            - name: "⚠️ Report"
+              value: "Report rule violations"
+              inline: true
+      - reference:
+          reference: "button/buttons.yml:main-menu"
+
+  # Quick registration command
+  register:
+    description: "Register as a member"
+    trigger: "register"
+    actions:
+      - reference:
+          reference: "modal/modals.yml:user-registration"
+
+  # Support ticket command
+  support:
+    description: "Create a support ticket"
+    trigger: "support"
+    actions:
+      - embed:
+          title: "🎫 Support Center"
+          description: "Fill out the form to create a support ticket"
+          color: "#3498db"
+      - reference:
+          reference: "modal/modals.yml:support-ticket"
+
+  # Suggestion command
+  suggest:
+    description: "Submit a suggestion"
+    trigger: "suggest"
+    actions:
+      - embed:
+          title: "💡 Suggestion Box"
+          description: "We value your feedback! Share your ideas with us."
+          color: "#FFD700"
+      - reference:
+          reference: "modal/modals.yml:suggestion"
+
+  # Report command
+  report:
+    description: "Report a user or issue"
+    trigger: "report"
+    actions:
+      - embed:
+          title: "⚠️ Report System"
+          description: "Help us keep the server safe by reporting violations"
+          color: "#e74c3c"
+      - reference:
+          reference: "modal/modals.yml:report-user"
+
+  # Info command with buttons
+  info:
+    description: "Server information"
+    trigger: "info"
+    actions:
+      - embed:
+          title: "ℹ️ Server Information"
+          description: "Welcome to our Discord server!"
+          color: "#2ecc71"
+          fields:
+            - name: "📊 Members"
+              value: "Growing community"
+              inline: true
+            - name: "🎮 Activities"
+              value: "Gaming, chatting, events"
+              inline: true
+            - name: "🛡️ Moderation"
+              value: "24/7 active staff"
+              inline: true
+      - reference:
+          reference: "button/buttons.yml:main-menu"
+
+  # Confirmation example
+  delete:
+    description: "Delete something (example)"
+    trigger: "delete"
+    actions:
+      - send_message:
+          content: "⚠️ This action cannot be undone!"
+      - reference:
+          reference: "button/buttons.yml:confirm-action"
+
+  # Complex workflow example
+  onboard:
+    description: "Complete onboarding process"
+    trigger: "onboard"
+    actions:
+      - embed:
+          title: "👋 Welcome to Onboarding!"
+          description: "Let's get you set up in a few simple steps"
+          color: "#9b59b6"
+          fields:
+            - name: "Step 1"
+              value: "Register your account"
+              inline: false
+            - name: "Step 2"
+              value: "Read the rules"
+              inline: false
+            - name: "Step 3"
+              value: "Choose your roles"
+              inline: false
+      - buttons:
+          message: "Ready to start?"
+          buttons:
+            - label: "Start Registration"
+              id: "start_onboard"
+              style: SUCCESS
+              emoji: "🚀"
+              reference: "button/buttons.yml:register-button"
+            - label: "Need Help?"
+              id: "help_onboard"
+              style: PRIMARY
+              emoji: "❓"
+              reference: "button/buttons.yml:support-button"
+
+  # Vote command
+  vote:
+    description: "Create a quick vote"
+    trigger: "vote"
+    actions:
+      - send_message:
+          content: "📊 Quick Poll: Do you like this feature?"
+      - reference:
+          reference: "button/buttons.yml:vote-buttons"

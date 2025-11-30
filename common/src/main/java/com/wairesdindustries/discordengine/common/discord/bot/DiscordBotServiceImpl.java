@@ -75,7 +75,7 @@ public class DiscordBotServiceImpl implements DiscordBotService {
                                       net.dv8tion.jda.api.utils.cache.CacheFlag.EMOJI,
                                       net.dv8tion.jda.api.utils.cache.CacheFlag.STICKER,
                                       net.dv8tion.jda.api.utils.cache.CacheFlag.SCHEDULED_EVENTS)
-                        .addEventListeners(new com.wairesdindustries.discordengine.common.discord.event.EventListener(api), api.getDiscordCommandManager())
+                        .addEventListeners(new com.wairesdindustries.discordengine.common.discord.event.EventListener(api), api.getDiscordCommandManager(), api.getComponentInteractionHandler())
                         .build();
                 
                 api.getPlatform().getLogger().info("[DiscordEngine] Bot '" + botName + "' connected successfully!");
