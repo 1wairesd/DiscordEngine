@@ -20,33 +20,4 @@ bot:
     # URL for streaming (only used if type=STREAMING)
     url: ""
 
-  # Resource sources
-  sources:
-    # Commands settings
-    # Load mode: local, global, both
-    commands:
-      mode: "both"
 
-      # Local command files
-      local:
-        - "commands.yml"
-
-      # Global command files
-      global:
-        - "commands.yml"
-
-    # Avatar settings
-    # Load mode: local or global
-    avatar:
-      mode: "local"
-
-      # Avatar file name
-      file: "avatar-discordengine-nofon.png"
-
-    # Language settings
-    # Load mode: local or global
-    lang:
-      mode: "local"
-
-      # Language file name
-      file: "en_US.yml"

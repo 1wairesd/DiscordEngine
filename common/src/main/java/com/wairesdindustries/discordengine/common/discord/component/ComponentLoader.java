@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.wairesdindustries.discordengine.api.discord.component.ComponentReference;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
+import com.wairesdindustries.discordengine.api.discord.component.ComponentReference;
 import com.wairesdindustries.discordengine.api.discord.entities.actions.DiscordAction;
 import com.wairesdindustries.discordengine.common.DiscordEngine;
 
@@ -28,7 +28,6 @@ public class ComponentLoader implements com.wairesdindustries.discordengine.api.
     private void initializeSearchPaths() {
         File dataFolder = api.getPlatform().getDataFolder();
         
-        searchPaths.add(new File(dataFolder, "discord/global").getAbsolutePath());
         
         File botsFolder = new File(dataFolder, "bots");
         if (botsFolder.exists() && botsFolder.isDirectory()) {

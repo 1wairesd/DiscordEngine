@@ -1,5 +1,16 @@
 package com.wairesdindustries.discordengine.common.config;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Level;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.ConfigurationNode;
+
 import com.wairesdindustries.discordengine.api.config.Config;
 import com.wairesdindustries.discordengine.api.config.Messages;
 import com.wairesdindustries.discordengine.api.config.converter.ConfigType;
@@ -10,17 +21,8 @@ import com.wairesdindustries.discordengine.api.manager.ConfigManager;
 import com.wairesdindustries.discordengine.common.config.converter.ConfigConverter;
 import com.wairesdindustries.discordengine.common.config.converter.DefaultConfigType;
 import com.wairesdindustries.discordengine.common.platform.BackendPlatform;
-import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.ConfigurationNode;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.logging.Level;
+import lombok.Getter;
 
 public class ConfigManagerImpl implements ConfigManager {
 
@@ -29,10 +31,6 @@ public class ConfigManagerImpl implements ConfigManager {
     private static final String[] defaultFiles = {
             "Config.yml",
             "Bots.yml"
-    };
-    
-    private static final String[] defaultDirectories = {
-            "discord"
     };
 
     @Getter
@@ -51,7 +49,6 @@ public class ConfigManagerImpl implements ConfigManager {
     public void load() {
         configurations.clear();
         createFiles();
-        createDirectories();
         loadConfigurations(platform.getDataFolder().listFiles(), false);
 
         try {
@@ -173,41 +170,6 @@ public class ConfigManagerImpl implements ConfigManager {
         }
     }
 
-    private void createDirectories() {
-        for (String dirName : defaultDirectories) {
-            File dir = new File(platform.getDataFolder(), dirName);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            // Ensure all subdirectories exist
-            new File(platform.getDataFolder(), "discord/global/button").mkdirs();
-            new File(platform.getDataFolder(), "discord/global/modal").mkdirs();
-            new File(platform.getDataFolder(), "discord/global/command").mkdirs();
-            new File(platform.getDataFolder(), "discord/global/avatar").mkdirs();
-            new File(platform.getDataFolder(), "discord/global/lang").mkdirs();
-            copyDirectoryFromResources(dirName, dir);
-        }
-    }
-
-    private void copyDirectoryFromResources(String resourcePath, File targetDir) {
-        // Global Commands
-        copyResourceFileIfExists("discord/global/command/commands.yml", new File(targetDir, "global/command/commands.yml"));
-        
-        // Global Components - Buttons
-        copyResourceFileIfExists("discord/global/button/buttons.yml", new File(targetDir, "global/button/buttons.yml"));
-        
-        // Global Components - Modals
-        copyResourceFileIfExists("discord/global/modal/modals.yml", new File(targetDir, "global/modal/modals.yml"));
-        
-        // Global Avatar
-        copyResourceFileIfExists("discord/global/avatar/avatar-discordengine-nofon.png", new File(targetDir, "global/avatar/avatar-discordengine-nofon.png"));
-        
-        // Global Languages
-        copyResourceFileIfExists("discord/global/lang/en_US.yml", new File(targetDir, "global/lang/en_US.yml"));
-        copyResourceFileIfExists("discord/global/lang/ru_RU.yml", new File(targetDir, "global/lang/ru_RU.yml"));
-        copyResourceFileIfExists("discord/global/lang/uk_UA.yml", new File(targetDir, "global/lang/uk_UA.yml"));
-    }
-
     public void copyBotDefaultResources(String botName) {
         File botDir = new File(platform.getDataFolder(), "bots/" + botName);
         File discordDir = new File(botDir, "discord");
@@ -239,23 +201,18 @@ public class ConfigManagerImpl implements ConfigManager {
             }
         }
 
-        // Copy Avatar
         copyResourceFileIfExists("bots/default/discord/bot/avatar/avatar-discordengine-nofon.png", 
             new File(botSubDir, "avatar/avatar-discordengine-nofon.png"));
 
-        // Copy Commands
         copyResourceFileIfExists("bots/default/discord/bot/command/commands.yml", 
             new File(botSubDir, "command/commands.yml"));
 
-        // Copy Buttons
         copyResourceFileIfExists("bots/default/discord/bot/button/buttons.yml", 
             new File(botSubDir, "button/buttons.yml"));
 
-        // Copy Modals
         copyResourceFileIfExists("bots/default/discord/bot/modal/modals.yml", 
             new File(botSubDir, "modal/modals.yml"));
 
-        // Copy Languages
         String[] langFiles = {"en_US.yml", "ru_RU.yml", "uk_UA.yml"};
         for (String langFile : langFiles) {
             copyResourceFileIfExists("bots/default/discord/bot/lang/" + langFile, 
@@ -294,20 +251,6 @@ bot:
     text: "Discord Engine"
     type: "PLAYING"
     url: ""
-
-sources:
-  commands:
-    mode: "both"
-    local:
-      - "commands.yml"
-    global:
-      - "commands.yml"
-  avatar:
-    mode: "local"
-    file: "avatar.png"
-  lang:
-    mode: "local"
-    file: "en_US.yml"
 """;
     }
 

@@ -11,6 +11,7 @@ libraries:
   - org.spongepowered:configurate-yaml:4.2.0
   - net.kyori:event-api:3.0.0
   - net.kyori:event-method:3.0.0
+  - org.slf4j:slf4j-nop:2.0.9
 
 commands:
   discordengine:

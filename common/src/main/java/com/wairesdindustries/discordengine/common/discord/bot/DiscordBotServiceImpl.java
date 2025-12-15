@@ -29,6 +29,14 @@ public class DiscordBotServiceImpl implements DiscordBotService {
     public DiscordBotServiceImpl(DiscordEngine api, String botName) {
         this.api = api;
         this.botName = botName;
+        
+        try {
+            Class<?> jdaLoggerClass = Class.forName("net.dv8tion.jda.internal.utils.JDALogger");
+            java.lang.reflect.Method method = jdaLoggerClass.getMethod("setFallbackLoggerEnabled", boolean.class);
+            method.invoke(null, false);
+        } catch (Exception e) {
+           
+        }
     }
 
     @Override
