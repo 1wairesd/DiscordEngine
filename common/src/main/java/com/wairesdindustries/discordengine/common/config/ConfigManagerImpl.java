@@ -173,50 +173,68 @@ public class ConfigManagerImpl implements ConfigManager {
     public void copyBotDefaultResources(String botName) {
         File botDir = new File(platform.getDataFolder(), "bots/" + botName);
         File discordDir = new File(botDir, "discord");
-        File botSubDir = new File(discordDir, "bot");
 
-        new File(botSubDir, "avatar").mkdirs();
-        new File(botSubDir, "command").mkdirs();
-        new File(botSubDir, "lang").mkdirs();
-        new File(botSubDir, "button").mkdirs();
-        new File(botSubDir, "modal").mkdirs();
+        new File(discordDir, "assets").mkdirs();
+        new File(discordDir, "lang").mkdirs();
+        new File(discordDir, "globals").mkdirs();
+        new File(discordDir, "flows").mkdirs();
+        new File(discordDir, "modals").mkdirs();
 
-        File configFile = new File(discordDir, "Config.yml");
+        File configFile = new File(discordDir, "engine.yml");
+
+        File oldConfigFile = new File(discordDir, "Config.yml");
+        if (oldConfigFile.exists() && !configFile.exists()) {
+            try {
+                String oldContent = java.nio.file.Files.readString(oldConfigFile.toPath());
+                String newContent = oldContent.replace("discord-config-bot", "discord-engine");
+                java.nio.file.Files.writeString(configFile.toPath(), newContent);
+                platform.getLogger().info("Migrated Config.yml to engine.yml for bot: " + botName);
+            } catch (Exception e) {
+                platform.getLogger().warning("Failed to migrate config file: " + e.getMessage());
+            }
+        }
+        
         if (!configFile.exists()) {
-            try (java.io.InputStream is = platform.getResource("bots/default/discord/Config.yml")) {
+            try (java.io.InputStream is = platform.getResource("bots/default/discord/engine.yml")) {
                 if (is != null) {
                     java.nio.file.Files.copy(is, configFile.toPath());
-                    platform.getLogger().info("Copied bot config for: " + botName);
+                    platform.getLogger().info("Copied bot engine config for: " + botName);
                 } else {
                     java.nio.file.Files.writeString(configFile.toPath(), getDefaultBotConfig());
-                    platform.getLogger().info("Created default bot config for: " + botName);
+                    platform.getLogger().info("Created default bot engine config for: " + botName);
                 }
             } catch (Exception e) {
-                platform.getLogger().warning("Failed to copy bot config, creating default: " + e.getMessage());
+                platform.getLogger().warning("Failed to copy bot engine config, creating default: " + e.getMessage());
                 try {
                     java.nio.file.Files.writeString(configFile.toPath(), getDefaultBotConfig());
                 } catch (Exception fallbackException) {
-                    platform.getLogger().severe("Failed to create bot config: " + fallbackException.getMessage());
+                    platform.getLogger().severe("Failed to create bot engine config: " + fallbackException.getMessage());
                 }
             }
         }
 
-        copyResourceFileIfExists("bots/default/discord/bot/assets/avatar-discordengine-nofon.png",
-            new File(botSubDir, "avatar/avatar-discordengine-nofon.png"));
+        copyResourceFileIfExists("bots/default/discord/assets/avatar.png",
+            new File(discordDir, "assets/avatar.png"));
 
-        copyResourceFileIfExists("bots/default/discord/bot/command/commands.yml", 
-            new File(botSubDir, "command/commands.yml"));
+        copyResourceFileIfExists("bots/default/discord/globals/commands.yml", 
+            new File(discordDir, "globals/commands.yml"));
 
-        copyResourceFileIfExists("bots/default/discord/bot/button/buttons.yml", 
-            new File(botSubDir, "button/buttons.yml"));
+        copyResourceFileIfExists("bots/default/discord/globals/buttons.yml", 
+            new File(discordDir, "globals/buttons.yml"));
 
-        copyResourceFileIfExists("bots/default/discord/bot/modal/modals.yml", 
-            new File(botSubDir, "modal/modals.yml"));
+        copyResourceFileIfExists("bots/default/discord/flows/hello.yml", 
+            new File(discordDir, "flows/hello.yml"));
+
+        copyResourceFileIfExists("bots/default/discord/flows/register.yml", 
+            new File(discordDir, "flows/register.yml"));
+
+        copyResourceFileIfExists("bots/default/discord/modals/user_register.yml", 
+            new File(discordDir, "modals/user_register.yml"));
 
         String[] langFiles = {"en_US.yml", "ru_RU.yml", "uk_UA.yml"};
         for (String langFile : langFiles) {
-            copyResourceFileIfExists("bots/default/discord/bot/lang/" + langFile, 
-                new File(botSubDir, "lang/" + langFile));
+            copyResourceFileIfExists("bots/default/discord/lang/" + langFile, 
+                new File(discordDir, "lang/" + langFile));
         }
     }
 
@@ -243,7 +261,7 @@ public class ConfigManagerImpl implements ConfigManager {
         return """
 config:
   version: 1
-  type: discord-config-bot
+  type: discord-engine
 
 bot:
   token: "your-bot-token"

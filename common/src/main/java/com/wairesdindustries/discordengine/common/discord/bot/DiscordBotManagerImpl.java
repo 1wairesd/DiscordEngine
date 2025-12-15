@@ -50,12 +50,14 @@ public class DiscordBotManagerImpl implements DiscordBotManager {
     
     private void createBotStructure(String botName) {
         File botDir = new File(api.getPlatform().getDataFolder(), "bots/" + botName);
-        if (!botDir.exists()) {
+        boolean isNewBot = !botDir.exists();
+        
+        if (isNewBot) {
             botDir.mkdirs();
-            // Delegate all file copying to ConfigManager
-            if (api.getConfigManager() instanceof com.wairesdindustries.discordengine.common.config.ConfigManagerImpl configManager) {
-                configManager.copyBotDefaultResources(botName);
-            }
+        }
+
+        if (api.getConfigManager() instanceof com.wairesdindustries.discordengine.common.config.ConfigManagerImpl configManager) {
+            configManager.copyBotDefaultResources(botName);
         }
     }
     
@@ -83,7 +85,7 @@ public class DiscordBotManagerImpl implements DiscordBotManager {
                     api.getDiscordAvatarService().updateAvatar();
                 }
                 case "command" -> {
-                    api.getDiscordCommandLoader().load();
+                    api.getFlowManager().load();
                     api.getDiscordCommandManager().registerAll();
                 }
                 case "lang" -> api.getConfigManager().load();

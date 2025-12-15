@@ -54,7 +54,6 @@ public class ReloadCommand extends DefaultCommand {
     }
 
     private void refreshDiscordCommands() {
-        api.getDiscordCommandLoader().load();
         api.getDiscordCommandManager().registerAll();
     }
 

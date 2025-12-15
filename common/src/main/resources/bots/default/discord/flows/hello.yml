@@ -1,0 +1,8 @@
+flow:
+  id: hello
+
+  steps:
+    start:
+      action:
+        send_message:
+          content: "👋 Hello! Welcome to the new flow-based Discord Engine!"

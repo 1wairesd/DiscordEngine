@@ -1,0 +1,13 @@
+config:
+  version: 1
+  type: discord-engine
+
+bot:
+  # Bot token from Discord Developer Portal
+  token: "your-bot-token"
+
+  # Activity settings
+  activity:
+    text: "Discord Engine"
+    type: "PLAYING"
+    url: ""

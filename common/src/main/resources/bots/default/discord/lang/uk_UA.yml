@@ -1,0 +1,8 @@
+config: # Please do not touch this section
+  version: 1
+  type: discord-lang-bot
+
+command-not-found: "❌ Команди не знайдено."
+
+register:
+  success: "✅ Реєстрація завершена! Ласкаво просимо на сервер!"

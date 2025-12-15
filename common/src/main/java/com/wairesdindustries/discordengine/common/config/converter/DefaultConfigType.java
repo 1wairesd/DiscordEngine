@@ -1,15 +1,16 @@
 package com.wairesdindustries.discordengine.common.config.converter;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.wairesdindustries.discordengine.api.config.converter.ConfigMigrator;
 import com.wairesdindustries.discordengine.api.config.converter.ConfigType;
 import com.wairesdindustries.discordengine.api.data.config.ConfigData;
 import com.wairesdindustries.discordengine.api.data.config.ConfigSerializer;
 import com.wairesdindustries.discordengine.common.config.converter.migrators.UnknownMigrator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public enum DefaultConfigType implements ConfigType {
 
@@ -20,7 +21,7 @@ public enum DefaultConfigType implements ConfigType {
             new ConfigSerializer(ConfigData.class)
     ),
 
-    UNKNOWN_CUSTOM(0),
+    UNKNOWN_CUSTOM(1),
 
     LANG(1, new HashMap<Integer, ConfigMigrator>() {{
         // миграторы будут добавлены позже
@@ -50,6 +51,10 @@ public enum DefaultConfigType implements ConfigType {
         //  миграторы будут добавлены позже
     }}, new ConfigSerializer(com.wairesdindustries.discordengine.api.data.config.BotConfigData.class, "bot")),
 
+    DISCORD_ENGINE(1, new HashMap<Integer, ConfigMigrator>() {{
+        // миграторы будут добавлены позже
+    }}, new ConfigSerializer(com.wairesdindustries.discordengine.api.data.config.BotConfigData.class, "bot")),
+
     UNKNOWN(true, new UnknownMigrator());
 
     private int latestVersion;
@@ -63,7 +68,8 @@ public enum DefaultConfigType implements ConfigType {
     public static DefaultConfigType getType(String name) {
         if (name != null) {
             try {
-                return valueOf(name.toUpperCase().replace("-", "_"));
+                String enumName = name.toUpperCase().replace("-", "_");
+                return valueOf(enumName);
             } catch (IllegalArgumentException ex) {
                 return UNKNOWN_CUSTOM;
             }

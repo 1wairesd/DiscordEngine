@@ -19,11 +19,9 @@ import com.wairesdindustries.discordengine.common.discord.bot.DiscordBotManagerI
 import com.wairesdindustries.discordengine.common.discord.bot.DiscordBotServiceImpl;
 import com.wairesdindustries.discordengine.common.discord.bot.DiscordMessagingImpl;
 import com.wairesdindustries.discordengine.common.discord.command.DiscordCommandManagerImpl;
-import com.wairesdindustries.discordengine.common.discord.component.ComponentInteractionHandler;
-import com.wairesdindustries.discordengine.common.discord.component.ComponentLoader;
-import com.wairesdindustries.discordengine.common.discord.config.DiscordCommandLoader;
+import com.wairesdindustries.discordengine.common.discord.event.EventListener;
 import com.wairesdindustries.discordengine.common.event.EventBusImpl;
-import com.wairesdindustries.discordengine.common.event.EventListener;
+import com.wairesdindustries.discordengine.common.flow.FlowManager;
 import com.wairesdindustries.discordengine.common.manager.SubCommandManagerImpl;
 import com.wairesdindustries.discordengine.common.platform.BackendPlatform;
 
@@ -32,9 +30,7 @@ public final class DiscordEngine extends DEAPI {
     private final BackendPlatform platform;
     private final SubCommandManagerImpl subCommandManager;
     private final ConfigManagerImpl configManager;
-    private final DiscordCommandLoader commandLoader;
-    private final ComponentLoader componentLoader;
-    private final ComponentInteractionHandler componentInteractionHandler;
+    private final FlowManager flowManager;
     private final DiscordCommandManagerImpl commandManager;
     private final EventBusImpl eventBus;
     private final EventListener eventListener;
@@ -49,9 +45,7 @@ public final class DiscordEngine extends DEAPI {
 
         this.configManager = new ConfigManagerImpl(platform);
         this.subCommandManager = new SubCommandManagerImpl(this);
-        this.commandLoader = new DiscordCommandLoader(this);
-        this.componentLoader = new ComponentLoader(this);
-        this.componentInteractionHandler = new ComponentInteractionHandler(this);
+        this.flowManager = new FlowManager(this);
         this.botService = new DiscordBotServiceImpl(this);
         this.botManager = new DiscordBotManagerImpl(this);
         this.messagingService = new DiscordMessagingImpl(this.botService);
@@ -67,17 +61,14 @@ public final class DiscordEngine extends DEAPI {
     public void load() {
         long time = System.currentTimeMillis();
         configManager.load();
-        commandLoader.load();
-        componentLoader.load();
         botManager.loadBots();
+        flowManager.load();
         botManager.connectAll();
-        eventBus.register(eventListener);
         platform.getLogger().info("Enabled in " + (System.currentTimeMillis() - time) + "ms");
     }
 
     public void unload() {
         botManager.closeAll();
-        eventBus.unregister(eventListener);
     }
 
     @Override
@@ -95,9 +86,8 @@ public final class DiscordEngine extends DEAPI {
         return platform;
     }
 
-    @Override
-    public @NotNull DiscordCommandLoader getDiscordCommandLoader() {
-        return commandLoader;
+    public @NotNull FlowManager getFlowManager() {
+        return flowManager;
     }
 
     @Override
@@ -135,14 +125,6 @@ public final class DiscordEngine extends DEAPI {
         return botManager;
     }
 
-    @Override
-    public @NotNull com.wairesdindustries.discordengine.api.discord.component.ComponentLoader getComponentLoader() {
-        return componentLoader;
-    }
 
-    @Override
-    public @NotNull ComponentInteractionHandler getComponentInteractionHandler() {
-        return componentInteractionHandler;
-    }
 
 }

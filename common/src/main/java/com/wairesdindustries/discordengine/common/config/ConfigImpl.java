@@ -1,9 +1,7 @@
 package com.wairesdindustries.discordengine.common.config;
 
-import com.wairesdindustries.discordengine.api.config.Config;
-import com.wairesdindustries.discordengine.api.config.converter.ConfigType;
-import com.wairesdindustries.discordengine.api.data.config.ConfigSerializer;
-import com.wairesdindustries.discordengine.common.config.converter.DefaultConfigType;
+import java.io.File;
+
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -12,7 +10,10 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
-import java.io.File;
+import com.wairesdindustries.discordengine.api.config.Config;
+import com.wairesdindustries.discordengine.api.config.converter.ConfigType;
+import com.wairesdindustries.discordengine.api.data.config.ConfigSerializer;
+import com.wairesdindustries.discordengine.common.config.converter.DefaultConfigType;
 
 public class ConfigImpl implements Config {
     private final File file;
@@ -40,16 +41,24 @@ public class ConfigImpl implements Config {
     private void setMeta() throws SerializationException {
         ConfigurationNode metaNode = node.node("config");
         String version = metaNode.node("version").getString();
+        String typeString = metaNode.node("type").getString();
 
         if (version != null) {
             this.version = parse(version);
-            if (this.type == null)
-                this.type = DefaultConfigType.getType(metaNode.node("type").getString());
+            if (this.type == null) {
+                this.type = DefaultConfigType.getType(typeString);
+            }
+        } else {
+            if (this.type == null) {
+                this.type = DefaultConfigType.UNKNOWN;
+            }
         }
 
-        ConfigSerializer configSerializer = type.getConfigSerializer();
-        if (configSerializer != null) {
-            this.serialized = node(configSerializer.path()).get(configSerializer.serializer());
+        if (type != null) {
+            ConfigSerializer configSerializer = type.getConfigSerializer();
+            if (configSerializer != null) {
+                this.serialized = node(configSerializer.path()).get(configSerializer.serializer());
+            }
         }
     }
 

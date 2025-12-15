@@ -2,7 +2,6 @@ package com.wairesdindustries.discordengine.api;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.wairesdindustries.discordengine.api.config.Loadable;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordAvatar;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotManager;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotService;
@@ -29,8 +28,6 @@ public abstract class DEAPI {
 
     public abstract @NotNull DEConfirmationManager getConfirmationManager();
 
-    public abstract @NotNull Loadable getDiscordCommandLoader();
-
     public abstract @NotNull DiscordCommandManager getDiscordCommandManager();
 
     public abstract @NotNull DiscordBotService getDiscordBotService();
@@ -42,9 +39,5 @@ public abstract class DEAPI {
     public abstract @NotNull DiscordAvatar getDiscordAvatarService();
 
     public abstract @NotNull DiscordMessaging getDiscordMessagingService();
-
-    public abstract @NotNull com.wairesdindustries.discordengine.api.discord.component.ComponentLoader getComponentLoader();
-    
-    public abstract @NotNull Object getComponentInteractionHandler();
 
 }

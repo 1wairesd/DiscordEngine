@@ -1,0 +1,22 @@
+modal:
+  id: user_register
+  title: "User Registration"
+
+  inputs:
+    - id: username
+      label: "Username"
+      style: SHORT
+      placeholder: "Enter your username"
+      required: true
+
+    - id: age
+      label: "Age"
+      style: SHORT
+      placeholder: "18"
+      required: true
+
+    - id: bio
+      label: "Bio"
+      style: PARAGRAPH
+      placeholder: "Tell us about yourself..."
+      required: false

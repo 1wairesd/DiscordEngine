@@ -1,0 +1,14 @@
+flow:
+  id: register
+
+  steps:
+
+    start:
+      action:
+        open_modal: user_register
+      next: finish
+
+    finish:
+      actions:
+        - send_message:
+            content: "✅ Registration completed! Welcome to the server!"

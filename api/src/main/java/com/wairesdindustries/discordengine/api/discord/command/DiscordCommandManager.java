@@ -6,6 +6,8 @@ public interface DiscordCommandManager {
 
     void registerCommand(DiscordCommand command);
 
+    void registerCommand(String name, String description);
+
     void registerAll();
 
 }

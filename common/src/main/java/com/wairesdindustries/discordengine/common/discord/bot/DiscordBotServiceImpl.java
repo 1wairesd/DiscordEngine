@@ -45,7 +45,7 @@ public class DiscordBotServiceImpl implements DiscordBotService {
         
         CompletableFuture.runAsync(() -> {
             try {
-                String configPath = "bots/" + botName + "/discord/Config.yml";
+                String configPath = "bots/" + botName + "/discord/engine.yml";
 
                 File configFile = new File(api.getPlatform().getDataFolder(), configPath);
                 if (!configFile.exists()) {
@@ -68,7 +68,7 @@ public class DiscordBotServiceImpl implements DiscordBotService {
                 String token = botConfig != null ? botConfig.getToken() : null;
                 
                 if (token == null || token.equals("your-bot-token")) {
-                    api.getPlatform().getLogger().warning("[DiscordEngine] Bot '" + botName + "' has no valid token. Please set a valid Discord bot token in bots/" + botName + "/discord/Config.yml");
+                    api.getPlatform().getLogger().warning("[DiscordEngine] Bot '" + botName + "' has no valid token. Please set a valid Discord bot token in bots/" + botName + "/discord/engine.yml");
                     future.complete(null);
                     return;
                 }
@@ -83,7 +83,7 @@ public class DiscordBotServiceImpl implements DiscordBotService {
                                       net.dv8tion.jda.api.utils.cache.CacheFlag.EMOJI,
                                       net.dv8tion.jda.api.utils.cache.CacheFlag.STICKER,
                                       net.dv8tion.jda.api.utils.cache.CacheFlag.SCHEDULED_EVENTS)
-                        .addEventListeners(new com.wairesdindustries.discordengine.common.discord.event.EventListener(api), api.getDiscordCommandManager(), api.getComponentInteractionHandler())
+                        .addEventListeners(new com.wairesdindustries.discordengine.common.discord.event.EventListener(api), api.getDiscordCommandManager())
                         .build();
                 
                 api.getPlatform().getLogger().info("[DiscordEngine] Bot '" + botName + "' connected successfully!");

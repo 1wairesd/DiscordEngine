@@ -16,7 +16,3 @@ discord-command-deleted: "&aCommand %trigger% unlinked in Discord!"
 discord-command-delete-confirm: "&cYou are about to unlink all commands registered in Discord! Please confirm by entering Y or N."
 discord-command-delete-cancel: "&cCommand unlinking cancelled."
 discord-command-delete-all: "&aAll commands in Discord have been unlinked!"
-
-# типа например можно создавать кастомные сообщения для команд бота
-register:
-  success: "✅ Registration completed!"
