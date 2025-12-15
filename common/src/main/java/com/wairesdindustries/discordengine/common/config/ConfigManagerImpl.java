@@ -201,7 +201,7 @@ public class ConfigManagerImpl implements ConfigManager {
             }
         }
 
-        copyResourceFileIfExists("bots/default/discord/bot/avatar/avatar-discordengine-nofon.png", 
+        copyResourceFileIfExists("bots/default/discord/bot/assets/avatar-discordengine-nofon.png",
             new File(botSubDir, "avatar/avatar-discordengine-nofon.png"));
 
         copyResourceFileIfExists("bots/default/discord/bot/command/commands.yml", 

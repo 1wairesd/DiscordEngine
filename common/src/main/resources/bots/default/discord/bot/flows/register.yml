@@ -1,0 +1,16 @@
+flow:
+  id: register
+
+  steps:
+
+    start:
+      action: open_modal
+      modal: user_register
+      next: finish
+
+    finish:
+      actions:
+        - send_message:
+            key: register.success
+        - add_role:
+            role_id: MEMBER

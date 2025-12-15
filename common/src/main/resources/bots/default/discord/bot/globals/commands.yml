@@ -1,0 +1,4 @@
+commands:
+  register:
+    description: "User registration"
+    flow: register
