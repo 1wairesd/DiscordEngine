@@ -1,0 +1,8 @@
+config:
+  version: 1
+  type: discord-command
+
+command:
+  id: hello
+  description: "Say hello"
+  flow: hello

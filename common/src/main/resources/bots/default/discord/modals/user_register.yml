@@ -1,6 +1,15 @@
+config:
+  version: 1
+  type: discord-modal
+
 modal:
   id: user_register
   title: "User Registration"
+  
+  # What happens after modal is submitted
+  on_submit:
+    flow: register
+    step: process_registration
 
   inputs:
     - id: username

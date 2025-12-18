@@ -1,7 +1,0 @@
-commands:
-  hello:
-    description: "Say hello"
-    flow: hello
-  register:
-    description: "User registration"
-    flow: register

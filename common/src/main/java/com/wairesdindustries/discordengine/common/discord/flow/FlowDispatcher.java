@@ -1,4 +1,4 @@
-package com.wairesdindustries.discordengine.common.flow;
+package com.wairesdindustries.discordengine.common.discord.flow;
 
 import com.wairesdindustries.discordengine.common.DiscordEngine;
 
@@ -25,14 +25,12 @@ public class FlowDispatcher {
         String flowId = entryPointRegistry.getFlowForCommand(commandName);
         
         if (flowId == null) {
-            api.getPlatform().getLogger().warning("No flow mapped for command: " + commandName);
             event.reply("Command not configured").setEphemeral(true).queue();
             return;
         }
 
         Flow flow = flowRegistry.getFlow(flowId);
         if (flow == null) {
-            api.getPlatform().getLogger().warning("Flow not found: " + flowId + " for command: " + commandName);
             event.reply("Flow not found").setEphemeral(true).queue();
             return;
         }
@@ -46,14 +44,12 @@ public class FlowDispatcher {
         String flowId = entryPointRegistry.getFlowForButton(buttonId);
         
         if (flowId == null) {
-            api.getPlatform().getLogger().warning("No flow mapped for button: " + buttonId);
             event.reply("Button not configured").setEphemeral(true).queue();
             return;
         }
 
         Flow flow = flowRegistry.getFlow(flowId);
         if (flow == null) {
-            api.getPlatform().getLogger().warning("Flow not found: " + flowId + " for button: " + buttonId);
             event.reply("Flow not found").setEphemeral(true).queue();
             return;
         }
@@ -65,20 +61,30 @@ public class FlowDispatcher {
     public void handleModalInteraction(ModalInteractionEvent event) {
         String modalId = event.getModalId();
 
-        String flowId = modalId.startsWith("user_") ? modalId.substring(5) : modalId;
+        var modalRegistry = api.getFlowManager().getModalRegistry();
+        var modalDef = modalRegistry.getModal(modalId);
+        
+        String flowId;
+        String stepId;
+        
+        if (modalDef != null && modalDef.getOnSubmit() != null) {
+            flowId = modalDef.getOnSubmit().getFlowId();
+            stepId = modalDef.getOnSubmit().getStepId();
+        } else {
+            flowId = modalId.startsWith("user_") ? modalId.substring(5) : modalId;
+            stepId = "finish";
+        }
         
         Flow flow = flowRegistry.getFlow(flowId);
         if (flow == null) {
-            api.getPlatform().getLogger().warning("No flow found for modal: " + modalId + " (looking for flow: " + flowId + ")");
             event.reply("Modal processing failed").setEphemeral(true).queue();
             return;
         }
 
         FlowContext context = new FlowContext(event);
 
-        String nextStep = "finish";
-        if (flow.getStep(nextStep) != null) {
-            flowExecutor.executeFromStep(flow, nextStep, context);
+        if (flow.getStep(stepId) != null) {
+            flowExecutor.executeFromStep(flow, stepId, context);
         } else {
             flowExecutor.executeFlow(flow, context);
         }

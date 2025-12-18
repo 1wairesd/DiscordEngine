@@ -1,7 +1,7 @@
-package com.wairesdindustries.discordengine.common.flow.actions;
+package com.wairesdindustries.discordengine.common.discord.flow.actions;
 
-import com.wairesdindustries.discordengine.common.flow.FlowAction;
-import com.wairesdindustries.discordengine.common.flow.FlowContext;
+import com.wairesdindustries.discordengine.common.discord.flow.FlowAction;
+import com.wairesdindustries.discordengine.common.discord.flow.FlowContext;
 
 public class SendMessageAction implements FlowAction {
     private final String content;

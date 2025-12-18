@@ -1,4 +1,4 @@
-package com.wairesdindustries.discordengine.common.flow;
+package com.wairesdindustries.discordengine.common.discord.flow;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,11 +11,11 @@ import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import com.wairesdindustries.discordengine.common.DiscordEngine;
-import com.wairesdindustries.discordengine.common.flow.actions.AddRoleAction;
-import com.wairesdindustries.discordengine.common.flow.actions.OpenModalAction;
-import com.wairesdindustries.discordengine.common.flow.actions.SendMessageAction;
-import com.wairesdindustries.discordengine.common.flow.modal.ModalDefinition;
-import com.wairesdindustries.discordengine.common.flow.modal.ModalRegistry;
+import com.wairesdindustries.discordengine.common.discord.flow.actions.AddRoleAction;
+import com.wairesdindustries.discordengine.common.discord.flow.actions.OpenModalAction;
+import com.wairesdindustries.discordengine.common.discord.flow.actions.SendMessageAction;
+import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalDefinition;
+import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalRegistry;
 
 public class FlowLoader {
     private final DiscordEngine api;
@@ -47,14 +47,6 @@ public class FlowLoader {
             if (discordFolder.exists()) {
                 loadBotFlows(discordFolder);
             }
-        }
-
-        int flowCount = flowRegistry.getAllFlows().size();
-        int modalCount = modalRegistry.getAllModals().size();
-        api.getPlatform().getLogger().info("[FlowEngine] Loaded " + flowCount + " flows and " + modalCount + " modals");
-        
-        if (flowCount > 0) {
-            api.getPlatform().getLogger().info("[FlowEngine] Available flows: " + String.join(", ", flowRegistry.getAllFlows().keySet()));
         }
     }
 
@@ -118,7 +110,17 @@ public class FlowLoader {
                 }
             }
 
-            ModalDefinition modal = new ModalDefinition(id, title, inputs);
+            ModalDefinition.OnSubmit onSubmit = null;
+            ConfigurationNode onSubmitNode = modalNode.node("on_submit");
+            if (!onSubmitNode.virtual()) {
+                String flowId = onSubmitNode.node("flow").getString();
+                String stepId = onSubmitNode.node("step").getString();
+                if (flowId != null && stepId != null) {
+                    onSubmit = new ModalDefinition.OnSubmit(flowId, stepId);
+                }
+            }
+
+            ModalDefinition modal = new ModalDefinition(id, title, inputs, onSubmit);
             modalRegistry.registerModal(modal);
 
             

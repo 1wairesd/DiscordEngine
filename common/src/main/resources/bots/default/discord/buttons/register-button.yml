@@ -1,0 +1,7 @@
+config:
+  version: 1
+  type: discord-button
+
+button:
+  id: register-button
+  flow: register

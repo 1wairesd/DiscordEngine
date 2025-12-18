@@ -1,7 +1,7 @@
-package com.wairesdindustries.discordengine.common.flow;
+package com.wairesdindustries.discordengine.common.discord.flow;
 
 import com.wairesdindustries.discordengine.common.DiscordEngine;
-import com.wairesdindustries.discordengine.common.flow.modal.ModalRegistry;
+import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalRegistry;
 
 public class FlowManager {
     private final DiscordEngine api;

@@ -28,8 +28,6 @@ public class DiscordBotManagerImpl implements DiscordBotManager {
             ConfigurationNode botsConfig = api.getConfigManager().getConfig("Bots.yml").node();
             List<? extends ConfigurationNode> botsList = botsConfig.node("bots").childrenList();
             
-            api.getPlatform().getLogger().info("[DiscordEngine] Loading " + botsList.size() + " bot(s) from configuration...");
-            
             for (ConfigurationNode botNode : botsList) {
                 String name = botNode.node("name").getString("default");
                 boolean enabled = botNode.node("enabled").getBoolean(true);
@@ -38,9 +36,6 @@ public class DiscordBotManagerImpl implements DiscordBotManager {
                     createBotStructure(name);
                     DiscordBotService botService = new DiscordBotServiceImpl(api, name);
                     botServices.put(name, botService);
-                    api.getPlatform().getLogger().info("[DiscordEngine] Loaded bot configuration: " + name);
-                } else {
-                    api.getPlatform().getLogger().info("[DiscordEngine] Bot '" + name + "' is disabled in Bots.yml");
                 }
             }
         } catch (Exception e) {
@@ -106,11 +101,11 @@ public class DiscordBotManagerImpl implements DiscordBotManager {
     @Override
     public void connectAll() {
         if (botServices.isEmpty()) {
-            api.getPlatform().getLogger().warning("[DiscordEngine] No bots to connect!");
+            api.getPlatform().getLogger().warning("No bots to connect!");
             return;
         }
         
-        api.getPlatform().getLogger().info("[DiscordEngine] Connecting " + botServices.size() + " bot(s) to Discord...");
+        api.getPlatform().getLogger().info("Connecting " + botServices.size() + " bot(s) to Discord...");
         
         List<CompletableFuture<Void>> futures = botServices.values().stream()
                 .map(DiscordBotService::connect)

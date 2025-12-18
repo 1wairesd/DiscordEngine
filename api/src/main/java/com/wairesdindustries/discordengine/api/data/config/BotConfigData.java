@@ -12,12 +12,19 @@ public class BotConfigData {
     @Setting
     private Activity activity = new Activity();
     
+    @Setting
+    private Avatar avatar = new Avatar();
+    
     public String getToken() {
         return token;
     }
     
     public Activity getActivity() {
         return activity;
+    }
+    
+    public Avatar getAvatar() {
+        return avatar;
     }
     
     @ConfigSerializable
@@ -41,6 +48,16 @@ public class BotConfigData {
         
         public String getUrl() {
             return url;
+        }
+    }
+    
+    @ConfigSerializable
+    public static class Avatar {
+        @Setting
+        private String file = "avatar-discordengine-nofon.png";
+        
+        public String getFile() {
+            return file;
         }
     }
     

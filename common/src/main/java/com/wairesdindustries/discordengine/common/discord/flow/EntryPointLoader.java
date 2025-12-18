@@ -1,8 +1,7 @@
-package com.wairesdindustries.discordengine.common.flow;
+package com.wairesdindustries.discordengine.common.discord.flow;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
@@ -37,98 +36,96 @@ public class EntryPointLoader {
                 loadBotEntryPoints(discordFolder);
             }
         }
-
-        int commandCount = entryPointRegistry.getAllCommands().size();
-        int buttonCount = entryPointRegistry.getAllButtons().size();
-        api.getPlatform().getLogger().info("[FlowEngine] Loaded " + commandCount + " command mappings and " + buttonCount + " button mappings");
-        
-        if (commandCount > 0) {
-            api.getPlatform().getLogger().info("[FlowEngine] Available commands: " + String.join(", ", entryPointRegistry.getAllCommands().keySet()));
-        }
     }
 
     private void loadBotEntryPoints(File discordFolder) {
-        File globalsFolder = new File(discordFolder, "globals");
-        api.getPlatform().getLogger().info("[FlowEngine] Looking for globals in: " + globalsFolder.getAbsolutePath());
-        
-        if (!globalsFolder.exists() || !globalsFolder.isDirectory()) {
-            api.getPlatform().getLogger().warning("[FlowEngine] Globals folder not found: " + globalsFolder.getAbsolutePath());
-            return;
-        }
+        File commandsFolder = new File(discordFolder, "commands");
+        loadCommandsFromFolder(commandsFolder);
 
-        loadCommands(new File(globalsFolder, "commands.yml"));
-        loadButtons(new File(globalsFolder, "buttons.yml"));
+        File buttonsFolder = new File(discordFolder, "buttons");
+        loadButtonsFromFolder(buttonsFolder);
     }
 
-    private void loadCommands(File commandsFile) {
-        api.getPlatform().getLogger().info("[FlowEngine] Loading commands from: " + commandsFile.getAbsolutePath());
-        
-        if (!commandsFile.exists()) {
-            api.getPlatform().getLogger().warning("[FlowEngine] Commands file not found: " + commandsFile.getAbsolutePath());
+    private void loadCommandsFromFolder(File commandsFolder) {
+        if (!commandsFolder.exists() || !commandsFolder.isDirectory()) {
             return;
         }
 
-        try {
-            YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
-                .file(commandsFile)
-                .build();
-            
-            ConfigurationNode root = loader.load();
-            ConfigurationNode commandsNode = root.node("commands");
-            
-            api.getPlatform().getLogger().info("[FlowEngine] Commands node virtual: " + commandsNode.virtual());
-            api.getPlatform().getLogger().info("[FlowEngine] Commands node children count: " + commandsNode.childrenMap().size());
-            
-            if (!commandsNode.virtual()) {
-                for (Map.Entry<Object, ? extends ConfigurationNode> entry : commandsNode.childrenMap().entrySet()) {
-                    String commandName = entry.getKey().toString();
-                    ConfigurationNode commandNode = entry.getValue();
-                    
-                    String flowId = commandNode.node("flow").getString();
-                    String description = commandNode.node("description").getString("Flow-based command");
-                    
-                    api.getPlatform().getLogger().info("[FlowEngine] Processing command: " + commandName + " -> flow: " + flowId);
-                    
-                    if (flowId != null) {
-                        entryPointRegistry.registerCommand(commandName, flowId);
-                        api.getDiscordCommandManager().registerCommand(commandName, description);
-                        api.getPlatform().getLogger().info("[FlowEngine] Registered command: " + commandName + " -> " + flowId);
-                    }
-                }
-            }
-            
-        } catch (IOException e) {
-            api.getPlatform().getLogger().severe("Failed to load commands from " + commandsFile.getName() + ": " + e.getMessage());
+        File[] commandFiles = commandsFolder.listFiles((dir, name) -> 
+            name.endsWith(".yml") || name.endsWith(".yaml"));
+        
+        if (commandFiles == null) return;
+
+        for (File commandFile : commandFiles) {
+            loadCommandFile(commandFile);
         }
     }
 
-    private void loadButtons(File buttonsFile) {
-        if (!buttonsFile.exists()) {
-            return;
-        }
-
+    private void loadCommandFile(File commandFile) {
         try {
             YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
-                .file(buttonsFile)
+                .file(commandFile)
                 .build();
             
             ConfigurationNode root = loader.load();
-            ConfigurationNode buttonsNode = root.node("buttons");
+            ConfigurationNode commandNode = root.node("command");
             
-            if (!buttonsNode.virtual()) {
-                for (Map.Entry<Object, ? extends ConfigurationNode> entry : buttonsNode.childrenMap().entrySet()) {
-                    String buttonId = entry.getKey().toString();
-                    ConfigurationNode buttonNode = entry.getValue();
-                    
-                    String flowId = buttonNode.node("flow").getString();
-                    if (flowId != null) {
-                        entryPointRegistry.registerButton(buttonId, flowId);
-                    }
-                }
+            if (commandNode.virtual()) {
+                return;
+            }
+            
+            String commandId = commandNode.node("id").getString();
+            String flowId = commandNode.node("flow").getString();
+            String description = commandNode.node("description").getString("Flow-based command");
+
+            
+            if (commandId != null && flowId != null) {
+                entryPointRegistry.registerCommand(commandId, flowId);
+                api.getDiscordCommandManager().registerCommand(commandId, description);
             }
             
         } catch (IOException e) {
-            api.getPlatform().getLogger().severe("Failed to load buttons from " + buttonsFile.getName() + ": " + e.getMessage());
+            api.getPlatform().getLogger().severe("Failed to load command from " + commandFile.getName() + ": " + e.getMessage());
+        }
+    }
+
+    private void loadButtonsFromFolder(File buttonsFolder) {
+        if (!buttonsFolder.exists() || !buttonsFolder.isDirectory()) {
+            return;
+        }
+
+        File[] buttonFiles = buttonsFolder.listFiles((dir, name) -> 
+            name.endsWith(".yml") || name.endsWith(".yaml"));
+        
+        if (buttonFiles == null) return;
+
+        for (File buttonFile : buttonFiles) {
+            loadButtonFile(buttonFile);
+        }
+    }
+
+    private void loadButtonFile(File buttonFile) {
+        try {
+            YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
+                .file(buttonFile)
+                .build();
+            
+            ConfigurationNode root = loader.load();
+            ConfigurationNode buttonNode = root.node("button");
+            
+            if (buttonNode.virtual()) {
+                return;
+            }
+            
+            String buttonId = buttonNode.node("id").getString();
+            String flowId = buttonNode.node("flow").getString();
+            
+            if (buttonId != null && flowId != null) {
+                entryPointRegistry.registerButton(buttonId, flowId);
+            }
+            
+        } catch (IOException e) {
+            api.getPlatform().getLogger().severe("Failed to load button from " + buttonFile.getName() + ": " + e.getMessage());
         }
     }
 }

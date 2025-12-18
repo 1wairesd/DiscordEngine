@@ -1,4 +1,4 @@
-package com.wairesdindustries.discordengine.common.flow.modal;
+package com.wairesdindustries.discordengine.common.discord.flow.modal;
 
 import java.util.HashMap;
 import java.util.Map;

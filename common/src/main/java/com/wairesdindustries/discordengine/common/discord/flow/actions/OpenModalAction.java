@@ -1,12 +1,12 @@
-package com.wairesdindustries.discordengine.common.flow.actions;
+package com.wairesdindustries.discordengine.common.discord.flow.actions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wairesdindustries.discordengine.common.flow.FlowAction;
-import com.wairesdindustries.discordengine.common.flow.FlowContext;
-import com.wairesdindustries.discordengine.common.flow.modal.ModalDefinition;
-import com.wairesdindustries.discordengine.common.flow.modal.ModalRegistry;
+import com.wairesdindustries.discordengine.common.discord.flow.FlowAction;
+import com.wairesdindustries.discordengine.common.discord.flow.FlowContext;
+import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalDefinition;
+import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalRegistry;
 
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;

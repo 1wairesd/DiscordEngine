@@ -7,7 +7,7 @@ config-reloaded: "&aКонфігурацію перезавантажено!"
 no-permission: '&cУ вас немає прав'
 help:
   - '&9/%cmd% help &3- &2Поміч по плагіну'
-  - '&9/%cmd% reload bot <name> [type] &3- &2Перезавантажити конфіг'
+  - '&9/%cmd% reload [bot <name> [type]] &3- &2Перезавантажити конфіг'
   - '&9/%cmd% discord command delete &3- &2Видалити команду в Discord'
 
 confirmation-invalid-input: "&cНевірний ввід. Введіть &aY &cабо &cN"

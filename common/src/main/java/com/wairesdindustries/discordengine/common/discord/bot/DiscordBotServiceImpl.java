@@ -49,7 +49,6 @@ public class DiscordBotServiceImpl implements DiscordBotService {
 
                 File configFile = new File(api.getPlatform().getDataFolder(), configPath);
                 if (!configFile.exists()) {
-                    api.getPlatform().getLogger().warning("[DiscordEngine] Config file not found for bot '" + botName + "': " + configPath);
                     future.complete(null);
                     return;
                 }
@@ -58,7 +57,6 @@ public class DiscordBotServiceImpl implements DiscordBotService {
                 
                 var config = api.getConfigManager().getConfig(configPath);
                 if (config == null) {
-                    api.getPlatform().getLogger().severe("[DiscordEngine] Failed to load config for bot '" + botName + "'. Check the config file format.");
                     future.complete(null);
                     return;
                 }
@@ -68,12 +66,9 @@ public class DiscordBotServiceImpl implements DiscordBotService {
                 String token = botConfig != null ? botConfig.getToken() : null;
                 
                 if (token == null || token.equals("your-bot-token")) {
-                    api.getPlatform().getLogger().warning("[DiscordEngine] Bot '" + botName + "' has no valid token. Please set a valid Discord bot token in bots/" + botName + "/discord/engine.yml");
                     future.complete(null);
                     return;
                 }
-                
-                api.getPlatform().getLogger().info("[DiscordEngine] Connecting bot '" + botName + "' to Discord...");
 
                 this.jda = JDABuilder.createDefault(token, EnumSet.of(
                         GatewayIntent.GUILD_MESSAGES,
@@ -85,14 +80,17 @@ public class DiscordBotServiceImpl implements DiscordBotService {
                                       net.dv8tion.jda.api.utils.cache.CacheFlag.SCHEDULED_EVENTS)
                         .addEventListeners(new com.wairesdindustries.discordengine.common.discord.event.EventListener(api), api.getDiscordCommandManager())
                         .build();
-                
-                api.getPlatform().getLogger().info("[DiscordEngine] Bot '" + botName + "' connected successfully!");
+
+                if (botConfig.getAvatar() != null && botConfig.getAvatar().getFile() != null) {
+                    loadAndSetAvatar(botConfig.getAvatar().getFile());
+                }
+
                 future.complete(null);
             } catch (SerializationException e) {
-                api.getPlatform().getLogger().severe("[DiscordEngine] Failed to load config for bot '" + botName + "': " + e.getMessage());
+                api.getPlatform().getLogger().severe("Failed to load config for bot '" + botName + "': " + e.getMessage());
                 future.completeExceptionally(e);
             } catch (Exception e) {
-                api.getPlatform().getLogger().severe("[DiscordEngine] Failed to connect bot '" + botName + "': " + e.getMessage());
+                api.getPlatform().getLogger().severe("Failed to connect bot '" + botName + "': " + e.getMessage());
                 future.completeExceptionally(e);
             }
         });
@@ -242,6 +240,25 @@ public class DiscordBotServiceImpl implements DiscordBotService {
     public void updateSlashCommands() {
         if (jda != null && jda.getStatus() == JDA.Status.CONNECTED) {
             jda.updateCommands().queue();
+        }
+    }
+    
+    private void loadAndSetAvatar(String avatarFileName) {
+        if (jda == null || avatarFileName == null || avatarFileName.trim().isEmpty()) {
+            return;
+        }
+        
+        try {
+            File assetsDir = new File(api.getPlatform().getDataFolder(), "bots/" + botName + "/discord/assets");
+            File avatarFile = new File(assetsDir, avatarFileName);
+            
+            if (avatarFile.exists()) {
+                jda.getSelfUser().getManager().setAvatar(Icon.from(avatarFile)).queue();
+            } else {
+                api.getPlatform().getLogger().warning("Avatar file not found: " + avatarFile.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            api.getPlatform().getLogger().warning("Failed to load avatar for bot '" + botName + "': " + e.getMessage());
         }
     }
 }

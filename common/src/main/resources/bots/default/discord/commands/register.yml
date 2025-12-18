@@ -1,0 +1,8 @@
+config:
+  version: 1
+  type: discord-command
+
+command:
+  id: register
+  description: "User registration"
+  flow: register

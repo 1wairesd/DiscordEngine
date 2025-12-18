@@ -11,3 +11,8 @@ bot:
     text: "Discord Engine"
     type: "PLAYING"
     url: ""
+
+  # Avatar settings
+  avatar:
+    # Avatar file from assets folder
+    file: "avatar-discordengine-nofon.png"

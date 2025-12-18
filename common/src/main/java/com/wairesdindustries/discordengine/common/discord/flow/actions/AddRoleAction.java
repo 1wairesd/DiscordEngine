@@ -1,7 +1,7 @@
-package com.wairesdindustries.discordengine.common.flow.actions;
+package com.wairesdindustries.discordengine.common.discord.flow.actions;
 
-import com.wairesdindustries.discordengine.common.flow.FlowAction;
-import com.wairesdindustries.discordengine.common.flow.FlowContext;
+import com.wairesdindustries.discordengine.common.discord.flow.FlowAction;
+import com.wairesdindustries.discordengine.common.discord.flow.FlowContext;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;

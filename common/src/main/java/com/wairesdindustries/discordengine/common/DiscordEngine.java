@@ -1,7 +1,6 @@
 package com.wairesdindustries.discordengine.common;
 
 import org.jetbrains.annotations.NotNull;
-
 import com.wairesdindustries.discordengine.api.DEAPI;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordAvatar;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotManager;
@@ -21,7 +20,7 @@ import com.wairesdindustries.discordengine.common.discord.bot.DiscordMessagingIm
 import com.wairesdindustries.discordengine.common.discord.command.DiscordCommandManagerImpl;
 import com.wairesdindustries.discordengine.common.discord.event.EventListener;
 import com.wairesdindustries.discordengine.common.event.EventBusImpl;
-import com.wairesdindustries.discordengine.common.flow.FlowManager;
+import com.wairesdindustries.discordengine.common.discord.flow.FlowManager;
 import com.wairesdindustries.discordengine.common.manager.SubCommandManagerImpl;
 import com.wairesdindustries.discordengine.common.platform.BackendPlatform;
 
@@ -124,7 +123,4 @@ public final class DiscordEngine extends DEAPI {
     public @NotNull DiscordBotManager getDiscordBotManager() {
         return botManager;
     }
-
-
-
 }

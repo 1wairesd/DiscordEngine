@@ -31,25 +31,21 @@ public enum DefaultConfigType implements ConfigType {
         // миграторы будут добавлены позже
     }}),
 
-    DISCORD_COMMAND_BOT(1, new HashMap<Integer, ConfigMigrator>() {{
+    DISCORD_COMMANDS(1, new HashMap<Integer, ConfigMigrator>() {{
         // миграторы будут добавлены позже
     }}),
 
-    DISCORD_MODAL_BOT(1, new HashMap<Integer, ConfigMigrator>() {{
+    DISCORD_MODAL(1, new HashMap<Integer, ConfigMigrator>() {{
         // миграторы будут добавлены позже
     }}),
 
-    DISCORD_BUTTON_BOT(1, new HashMap<Integer, ConfigMigrator>() {{
+    DISCORD_BUTTONS(1, new HashMap<Integer, ConfigMigrator>() {{
         // миграторы будут добавлены позже
     }}),
 
     DISCORD_LANG_BOT(1, new HashMap<Integer, ConfigMigrator>() {{
        //  миграторы будут добавлены позже
     }}),
-
-    DISCORD_CONFIG_BOT (1, new HashMap<Integer, ConfigMigrator>() {{
-        //  миграторы будут добавлены позже
-    }}, new ConfigSerializer(com.wairesdindustries.discordengine.api.data.config.BotConfigData.class, "bot")),
 
     DISCORD_ENGINE(1, new HashMap<Integer, ConfigMigrator>() {{
         // миграторы будут добавлены позже
