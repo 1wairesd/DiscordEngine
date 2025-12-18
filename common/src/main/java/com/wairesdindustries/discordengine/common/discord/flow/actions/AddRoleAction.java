@@ -28,7 +28,8 @@ public class AddRoleAction implements FlowAction {
 
         Role role = guild.getRoleById(roleId);
         if (role == null) {
-            throw new IllegalArgumentException("Role not found: " + roleId);
+            System.out.println("Warning: Role not found: " + roleId + ". Skipping role assignment.");
+            return;
         }
 
         guild.addRoleToMember(member, role).queue();

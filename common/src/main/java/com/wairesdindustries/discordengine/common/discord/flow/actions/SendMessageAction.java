@@ -29,6 +29,13 @@ public class SendMessageAction implements FlowAction {
             messageContent = "Action completed successfully!";
         }
 
+        if (context.isModalInteraction()) {
+            for (var entry : context.getAllModalInputs().entrySet()) {
+                String placeholder = "{" + entry.getKey() + "}";
+                messageContent = messageContent.replace(placeholder, entry.getValue());
+            }
+        }
+
         if (context.isSlashCommand()) {
             var slashEvent = context.asSlashCommand();
             if (slashEvent.isAcknowledged()) {
