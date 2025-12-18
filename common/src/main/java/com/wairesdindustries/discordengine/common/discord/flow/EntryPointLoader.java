@@ -10,9 +10,9 @@ import com.wairesdindustries.discordengine.common.DiscordEngine;
 
 public class EntryPointLoader {
     private final DiscordEngine api;
-    private final EntryPointRegistry entryPointRegistry;
+    private final EntryPointRegistryImpl entryPointRegistry;
 
-    public EntryPointLoader(DiscordEngine api, EntryPointRegistry entryPointRegistry) {
+    public EntryPointLoader(DiscordEngine api, EntryPointRegistryImpl entryPointRegistry) {
         this.api = api;
         this.entryPointRegistry = entryPointRegistry;
     }

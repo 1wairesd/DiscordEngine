@@ -1,25 +1,26 @@
 package com.wairesdindustries.discordengine.common.discord.flow;
 
+import com.wairesdindustries.discordengine.api.discord.flow.*;
 import com.wairesdindustries.discordengine.common.DiscordEngine;
-import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalRegistry;
+import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalRegistryImpl;
 
-public class FlowManager {
+public class FlowManagerImpl implements FlowManager {
     private final DiscordEngine api;
-    private final FlowRegistry flowRegistry;
-    private final ModalRegistry modalRegistry;
-    private final EntryPointRegistry entryPointRegistry;
+    private final FlowRegistryImpl flowRegistry;
+    private final ModalRegistryImpl modalRegistry;
+    private final EntryPointRegistryImpl entryPointRegistry;
     private final FlowExecutor flowExecutor;
-    private final FlowDispatcher flowDispatcher;
+    private final FlowDispatcherImpl flowDispatcher;
     private final FlowLoader flowLoader;
     private final EntryPointLoader entryPointLoader;
 
-    public FlowManager(DiscordEngine api) {
+    public FlowManagerImpl(DiscordEngine api) {
         this.api = api;
-        this.flowRegistry = new FlowRegistry();
-        this.modalRegistry = new ModalRegistry();
-        this.entryPointRegistry = new EntryPointRegistry();
+        this.flowRegistry = new FlowRegistryImpl();
+        this.modalRegistry = new ModalRegistryImpl();
+        this.entryPointRegistry = new EntryPointRegistryImpl();
         this.flowExecutor = new FlowExecutor(api);
-        this.flowDispatcher = new FlowDispatcher(api, flowRegistry, entryPointRegistry, flowExecutor);
+        this.flowDispatcher = new FlowDispatcherImpl(api, flowRegistry, entryPointRegistry, flowExecutor);
         this.flowLoader = new FlowLoader(api, flowRegistry, modalRegistry);
         this.entryPointLoader = new EntryPointLoader(api, entryPointRegistry);
     }
@@ -29,14 +30,17 @@ public class FlowManager {
         entryPointLoader.load();
     }
 
+    @Override
     public FlowRegistry getFlowRegistry() {
         return flowRegistry;
     }
 
+    @Override
     public ModalRegistry getModalRegistry() {
         return modalRegistry;
     }
 
+    @Override
     public EntryPointRegistry getEntryPointRegistry() {
         return entryPointRegistry;
     }
@@ -45,6 +49,7 @@ public class FlowManager {
         return flowExecutor;
     }
 
+    @Override
     public FlowDispatcher getFlowDispatcher() {
         return flowDispatcher;
     }

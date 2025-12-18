@@ -1,23 +1,33 @@
 package com.wairesdindustries.discordengine.common.discord.flow;
 
+import com.wairesdindustries.discordengine.api.discord.flow.FlowDispatcher;
 import com.wairesdindustries.discordengine.common.DiscordEngine;
+import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalRegistryImpl;
 
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
-public class FlowDispatcher {
+public class FlowDispatcherImpl implements FlowDispatcher {
     private final DiscordEngine api;
-    private final FlowRegistry flowRegistry;
-    private final EntryPointRegistry entryPointRegistry;
+    private final FlowRegistryImpl flowRegistry;
+    private final EntryPointRegistryImpl entryPointRegistry;
     private final FlowExecutor flowExecutor;
 
-    public FlowDispatcher(DiscordEngine api, FlowRegistry flowRegistry, 
-                         EntryPointRegistry entryPointRegistry, FlowExecutor flowExecutor) {
+    public FlowDispatcherImpl(DiscordEngine api, FlowRegistryImpl flowRegistry,
+                              EntryPointRegistryImpl entryPointRegistry, FlowExecutor flowExecutor) {
         this.api = api;
         this.flowRegistry = flowRegistry;
         this.entryPointRegistry = entryPointRegistry;
         this.flowExecutor = flowExecutor;
+    }
+
+    @Override
+    public void handleSlashCommand(Object event) {
+        if (!(event instanceof SlashCommandInteractionEvent)) {
+            throw new IllegalArgumentException("Expected SlashCommandInteractionEvent");
+        }
+        handleSlashCommand((SlashCommandInteractionEvent) event);
     }
 
     public void handleSlashCommand(SlashCommandInteractionEvent event) {
@@ -29,7 +39,7 @@ public class FlowDispatcher {
             return;
         }
 
-        Flow flow = flowRegistry.getFlow(flowId);
+        Flow flow = flowRegistry.getFlowTyped(flowId);
         if (flow == null) {
             event.reply("Flow not found").setEphemeral(true).queue();
             return;
@@ -37,6 +47,14 @@ public class FlowDispatcher {
 
         FlowContext context = new FlowContext(event);
         flowExecutor.executeFlow(flow, context);
+    }
+
+    @Override
+    public void handleButtonInteraction(Object event) {
+        if (!(event instanceof ButtonInteractionEvent)) {
+            throw new IllegalArgumentException("Expected ButtonInteractionEvent");
+        }
+        handleButtonInteraction((ButtonInteractionEvent) event);
     }
 
     public void handleButtonInteraction(ButtonInteractionEvent event) {
@@ -48,7 +66,7 @@ public class FlowDispatcher {
             return;
         }
 
-        Flow flow = flowRegistry.getFlow(flowId);
+        Flow flow = flowRegistry.getFlowTyped(flowId);
         if (flow == null) {
             event.reply("Flow not found").setEphemeral(true).queue();
             return;
@@ -58,11 +76,19 @@ public class FlowDispatcher {
         flowExecutor.executeFlow(flow, context);
     }
 
+    @Override
+    public void handleModalInteraction(Object event) {
+        if (!(event instanceof ModalInteractionEvent)) {
+            throw new IllegalArgumentException("Expected ModalInteractionEvent");
+        }
+        handleModalInteraction((ModalInteractionEvent) event);
+    }
+
     public void handleModalInteraction(ModalInteractionEvent event) {
         String modalId = event.getModalId();
 
-        var modalRegistry = api.getFlowManager().getModalRegistry();
-        var modalDef = modalRegistry.getModal(modalId);
+        var modalRegistry = (ModalRegistryImpl) api.getFlowManager().getModalRegistry();
+        var modalDef = modalRegistry.getModalTyped(modalId);
         
         String flowId;
         String stepId;
@@ -75,7 +101,7 @@ public class FlowDispatcher {
             stepId = "finish";
         }
         
-        Flow flow = flowRegistry.getFlow(flowId);
+        Flow flow = flowRegistry.getFlowTyped(flowId);
         if (flow == null) {
             event.reply("Modal processing failed").setEphemeral(true).queue();
             return;

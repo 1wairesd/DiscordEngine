@@ -6,7 +6,7 @@ import java.util.List;
 import com.wairesdindustries.discordengine.common.discord.flow.FlowAction;
 import com.wairesdindustries.discordengine.common.discord.flow.FlowContext;
 import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalDefinition;
-import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalRegistry;
+import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalRegistryImpl;
 
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
@@ -15,16 +15,16 @@ import net.dv8tion.jda.api.interactions.modals.Modal;
 
 public class OpenModalAction implements FlowAction {
     private final String modalId;
-    private final ModalRegistry modalRegistry;
+    private final ModalRegistryImpl modalRegistry;
 
-    public OpenModalAction(String modalId, ModalRegistry modalRegistry) {
+    public OpenModalAction(String modalId, ModalRegistryImpl modalRegistry) {
         this.modalId = modalId;
         this.modalRegistry = modalRegistry;
     }
 
     @Override
     public void execute(FlowContext context) throws Exception {
-        ModalDefinition modalDef = modalRegistry.getModal(modalId);
+        ModalDefinition modalDef = modalRegistry.getModalTyped(modalId);
         if (modalDef == null) {
             throw new IllegalArgumentException("Modal not found: " + modalId);
         }

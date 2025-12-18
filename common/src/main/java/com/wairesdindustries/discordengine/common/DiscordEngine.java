@@ -1,6 +1,8 @@
 package com.wairesdindustries.discordengine.common;
 
+import com.wairesdindustries.discordengine.api.discord.flow.FlowManager;
 import org.jetbrains.annotations.NotNull;
+
 import com.wairesdindustries.discordengine.api.DEAPI;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordAvatar;
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordBotManager;
@@ -19,8 +21,8 @@ import com.wairesdindustries.discordengine.common.discord.bot.DiscordBotServiceI
 import com.wairesdindustries.discordengine.common.discord.bot.DiscordMessagingImpl;
 import com.wairesdindustries.discordengine.common.discord.command.DiscordCommandManagerImpl;
 import com.wairesdindustries.discordengine.common.discord.event.EventListener;
+import com.wairesdindustries.discordengine.common.discord.flow.FlowManagerImpl;
 import com.wairesdindustries.discordengine.common.event.EventBusImpl;
-import com.wairesdindustries.discordengine.common.discord.flow.FlowManager;
 import com.wairesdindustries.discordengine.common.manager.SubCommandManagerImpl;
 import com.wairesdindustries.discordengine.common.platform.BackendPlatform;
 
@@ -29,7 +31,7 @@ public final class DiscordEngine extends DEAPI {
     private final BackendPlatform platform;
     private final SubCommandManagerImpl subCommandManager;
     private final ConfigManagerImpl configManager;
-    private final FlowManager flowManager;
+    private final FlowManagerImpl flowManager;
     private final DiscordCommandManagerImpl commandManager;
     private final EventBusImpl eventBus;
     private final EventListener eventListener;
@@ -44,7 +46,7 @@ public final class DiscordEngine extends DEAPI {
 
         this.configManager = new ConfigManagerImpl(platform);
         this.subCommandManager = new SubCommandManagerImpl(this);
-        this.flowManager = new FlowManager(this);
+        this.flowManager = new FlowManagerImpl(this);
         this.botService = new DiscordBotServiceImpl(this);
         this.botManager = new DiscordBotManagerImpl(this);
         this.messagingService = new DiscordMessagingImpl(this.botService);
@@ -85,6 +87,7 @@ public final class DiscordEngine extends DEAPI {
         return platform;
     }
 
+    @Override
     public @NotNull FlowManager getFlowManager() {
         return flowManager;
     }

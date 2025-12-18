@@ -15,14 +15,14 @@ import com.wairesdindustries.discordengine.common.discord.flow.actions.AddRoleAc
 import com.wairesdindustries.discordengine.common.discord.flow.actions.OpenModalAction;
 import com.wairesdindustries.discordengine.common.discord.flow.actions.SendMessageAction;
 import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalDefinition;
-import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalRegistry;
+import com.wairesdindustries.discordengine.common.discord.flow.modal.ModalRegistryImpl;
 
 public class FlowLoader {
     private final DiscordEngine api;
-    private final FlowRegistry flowRegistry;
-    private final ModalRegistry modalRegistry;
+    private final FlowRegistryImpl flowRegistry;
+    private final ModalRegistryImpl modalRegistry;
 
-    public FlowLoader(DiscordEngine api, FlowRegistry flowRegistry, ModalRegistry modalRegistry) {
+    public FlowLoader(DiscordEngine api, FlowRegistryImpl flowRegistry, ModalRegistryImpl modalRegistry) {
         this.api = api;
         this.flowRegistry = flowRegistry;
         this.modalRegistry = modalRegistry;

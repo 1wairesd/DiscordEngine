@@ -1,9 +1,11 @@
 package com.wairesdindustries.discordengine.common.discord.flow;
 
+import com.wairesdindustries.discordengine.api.discord.flow.EntryPointRegistry;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class EntryPointRegistry {
+public class EntryPointRegistryImpl implements EntryPointRegistry {
     private final Map<String, String> commandToFlow = new HashMap<>();
     private final Map<String, String> buttonToFlow = new HashMap<>();
 

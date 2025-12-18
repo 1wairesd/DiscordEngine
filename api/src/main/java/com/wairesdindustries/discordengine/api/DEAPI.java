@@ -1,5 +1,6 @@
 package com.wairesdindustries.discordengine.api;
 
+import com.wairesdindustries.discordengine.api.discord.flow.FlowManager;
 import org.jetbrains.annotations.NotNull;
 
 import com.wairesdindustries.discordengine.api.discord.bot.DiscordAvatar;
@@ -39,5 +40,7 @@ public abstract class DEAPI {
     public abstract @NotNull DiscordAvatar getDiscordAvatarService();
 
     public abstract @NotNull DiscordMessaging getDiscordMessagingService();
+
+    public abstract @NotNull FlowManager getFlowManager();
 
 }
