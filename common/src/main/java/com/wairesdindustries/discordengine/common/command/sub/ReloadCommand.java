@@ -21,6 +21,13 @@ public class ReloadCommand extends DefaultCommand {
 
     @Override
     public List<String> getTabCompletions(@NotNull DECommandSender sender, @NotNull String label, @NotNull String[] args) {
+        if (args.length == 1) {
+            return List.of("bot");
+        } else if (args.length == 2 && "bot".equals(args[0])) {
+            return List.of("default");
+        } else if (args.length == 3 && "bot".equals(args[0])) {
+            return List.of("restart", "reconnect", "config");
+        }
         return List.of();
     }
 
@@ -48,6 +55,7 @@ public class ReloadCommand extends DefaultCommand {
 
     private void load() {
         api.getConfigManager().load();
+        api.getFlowManager().load();
 
         refreshDiscordCommands();
         refreshBotStatus();

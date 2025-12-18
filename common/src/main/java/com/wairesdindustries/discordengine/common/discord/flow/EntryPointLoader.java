@@ -77,10 +77,19 @@ public class EntryPointLoader {
             String commandId = commandNode.node("id").getString();
             String flowId = commandNode.node("flow").getString();
             String description = commandNode.node("description").getString("Flow-based command");
+            String scopeStr = commandNode.node("scope").getString("both");
 
-            
             if (commandId != null && flowId != null) {
-                entryPointRegistry.registerCommand(commandId, flowId);
+                CommandDefinition.CommandScope scope;
+                try {
+                    scope = CommandDefinition.CommandScope.valueOf(scopeStr.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    scope = CommandDefinition.CommandScope.BOTH;
+                    api.getPlatform().getLogger().warning("Invalid scope '" + scopeStr + "' for command " + commandId + ", using 'both'");
+                }
+
+                CommandDefinition commandDef = new CommandDefinition(commandId, description, flowId, scope);
+                entryPointRegistry.registerCommand(commandDef);
                 api.getDiscordCommandManager().registerCommand(commandId, description);
             }
             

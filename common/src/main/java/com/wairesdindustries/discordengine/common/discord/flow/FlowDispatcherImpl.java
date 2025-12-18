@@ -32,12 +32,28 @@ public class FlowDispatcherImpl implements FlowDispatcher {
 
     public void handleSlashCommand(SlashCommandInteractionEvent event) {
         String commandName = event.getName();
-        String flowId = entryPointRegistry.getFlowForCommand(commandName);
+        CommandDefinition commandDef = entryPointRegistry.getCommandDefinition(commandName);
         
-        if (flowId == null) {
+        if (commandDef == null) {
             event.reply("Command not configured").setEphemeral(true).queue();
             return;
         }
+
+        boolean isGuild = event.getGuild() != null;
+        boolean isDM = !isGuild;
+        
+        CommandDefinition.CommandScope scope = commandDef.getScope();
+        if ((scope == CommandDefinition.CommandScope.GUILD && isDM) ||
+            (scope == CommandDefinition.CommandScope.DM && isGuild)) {
+            
+            String scopeMessage = scope == CommandDefinition.CommandScope.GUILD 
+                ? "This command can only be used in servers." 
+                : "This command can only be used in direct messages.";
+            event.reply(scopeMessage).setEphemeral(true).queue();
+            return;
+        }
+
+        String flowId = commandDef.getFlowId();
 
         Flow flow = flowRegistry.getFlowTyped(flowId);
         if (flow == null) {

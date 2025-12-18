@@ -6,3 +6,4 @@ command:
   id: hello
   description: "Say hello"
   flow: hello
+  scope: "both"  # guild, dm, both

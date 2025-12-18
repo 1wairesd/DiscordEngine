@@ -6,3 +6,4 @@ command:
   id: register
   description: "User registration"
   flow: register
+  scope: "guild"  # guild, dm, both
